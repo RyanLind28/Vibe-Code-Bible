@@ -18,4 +18,4 @@ UIUX/
 
 ## Status
 
-Planned — folders and content coming soon.
+Complete — all 8 guides are written and reviewed.

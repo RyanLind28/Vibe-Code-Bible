@@ -316,6 +316,15 @@ Copy this template, fill in the blanks, and paste it at the start of every AI co
   - Loading: [e.g., "Loading..."]
   - Destructive confirm: [e.g., "This can't be undone. Delete this project?"]
 
+### Motion & Animation
+
+**Animation personality:** [e.g., snappy and decisive / gentle and flowing / bouncy and playful]
+**Default easing:** [e.g., ease-out for entrances, ease-in for exits]
+**Duration range:** [e.g., 150-300ms for micro-interactions, 300-500ms for transitions]
+**Micro-interactions:** [e.g., button scale on press, card hover lift, input focus glow]
+**Loading style:** [e.g., skeleton screens / spinner / progress bar / pulsing dots]
+**Reduced motion approach:** [e.g., fade-only / instant / simplified]
+
 ## Additional Notes
 [Anything else: specific patterns, layout preferences, reference URLs, screenshots]
 ~~~
@@ -412,7 +421,7 @@ Given the Flowline brief above, here is how it translates to actual code:
   --brand-secondary-100: oklch(0.93 0.04 160);
   --brand-secondary-200: oklch(0.86 0.08 160);
   --brand-secondary-300: oklch(0.78 0.12 160);
-  --brand-secondary-400: oklch(0.70 0.15 160);  /* brand secondary */
+  --brand-secondary-400: oklch(0.70 0.15 160);  /* brand secondary — base sits at 400 due to higher lightness */
   --brand-secondary-500: oklch(0.60 0.14 160);
   --brand-secondary-600: oklch(0.50 0.12 160);
   --brand-secondary-700: oklch(0.42 0.10 160);
@@ -545,82 +554,79 @@ Given the Flowline brief above, here is how it translates to actual code:
 
 #### Tailwind Config
 
-```js
-// tailwind.config.js — Flowline brand
-/** @type {import('tailwindcss').Config} */
-export default {
-  darkMode: "class",
-  theme: {
-    borderRadius: {
-      none: "0px",
-      sm: "6px",
-      DEFAULT: "12px",
-      md: "12px",
-      lg: "16px",
-      xl: "24px",
-      full: "9999px",
-    },
-    extend: {
-      colors: {
-        primary: {
-          50:  "oklch(0.97 0.02 285)",
-          100: "oklch(0.93 0.05 285)",
-          200: "oklch(0.86 0.10 285)",
-          300: "oklch(0.76 0.15 285)",
-          400: "oklch(0.66 0.19 285)",
-          500: "oklch(0.55 0.22 285)",
-          600: "oklch(0.48 0.20 285)",
-          700: "oklch(0.42 0.18 285)",
-          800: "oklch(0.35 0.15 285)",
-          900: "oklch(0.28 0.12 285)",
-          950: "oklch(0.20 0.08 285)",
-        },
-        secondary: {
-          50:  "oklch(0.97 0.02 160)",
-          100: "oklch(0.93 0.04 160)",
-          200: "oklch(0.86 0.08 160)",
-          300: "oklch(0.78 0.12 160)",
-          400: "oklch(0.70 0.15 160)",
-          500: "oklch(0.60 0.14 160)",
-          600: "oklch(0.50 0.12 160)",
-          700: "oklch(0.42 0.10 160)",
-        },
-        // Warm neutral (stone-based)
-        neutral: {
-          0:   "#ffffff",
-          50:  "#fafaf9",
-          100: "#f5f5f4",
-          200: "#e7e5e4",
-          300: "#d6d3d1",
-          400: "#a8a29e",
-          500: "#78716c",
-          600: "#57534e",
-          700: "#44403c",
-          800: "#292524",
-          900: "#1c1917",
-          950: "#0c0a09",
-        },
-      },
-      fontFamily: {
-        heading: ["Outfit", "system-ui", "-apple-system", "sans-serif"],
-        sans:    ["Inter", "system-ui", "-apple-system", "sans-serif"],
-        mono:    ["JetBrains Mono", "ui-monospace", "monospace"],
-      },
-      boxShadow: {
-        xs:  "0 1px 2px oklch(0 0 0 / 0.04)",
-        sm:  "0 1px 3px oklch(0 0 0 / 0.06), 0 1px 2px oklch(0 0 0 / 0.04)",
-        md:  "0 4px 12px oklch(0 0 0 / 0.06), 0 2px 4px oklch(0 0 0 / 0.04)",
-        lg:  "0 12px 24px oklch(0 0 0 / 0.08), 0 4px 8px oklch(0 0 0 / 0.04)",
-      },
-      spacing: {
-        // Generous spacing emphasis
-        18: "4.5rem",  // 72px
-        22: "5.5rem",  // 88px
-      },
-    },
-  },
-};
+**Tailwind v4** (CSS-first configuration — current as of 2025+):
+
+```css
+/* app.css — Flowline brand theme */
+@import "tailwindcss";
+
+@theme {
+  /* Border radius */
+  --radius-none: 0px;
+  --radius-sm: 6px;
+  --radius: 12px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* Primary (indigo) */
+  --color-primary-50:  oklch(0.97 0.02 285);
+  --color-primary-100: oklch(0.93 0.05 285);
+  --color-primary-200: oklch(0.86 0.10 285);
+  --color-primary-300: oklch(0.76 0.15 285);
+  --color-primary-400: oklch(0.66 0.19 285);
+  --color-primary-500: oklch(0.55 0.22 285);
+  --color-primary-600: oklch(0.48 0.20 285);
+  --color-primary-700: oklch(0.42 0.18 285);
+  --color-primary-800: oklch(0.35 0.15 285);
+  --color-primary-900: oklch(0.28 0.12 285);
+  --color-primary-950: oklch(0.20 0.08 285);
+
+  /* Secondary (teal) */
+  --color-secondary-50:  oklch(0.97 0.02 160);
+  --color-secondary-100: oklch(0.93 0.04 160);
+  --color-secondary-200: oklch(0.86 0.08 160);
+  --color-secondary-300: oklch(0.78 0.12 160);
+  --color-secondary-400: oklch(0.70 0.15 160);
+  --color-secondary-500: oklch(0.60 0.14 160);
+  --color-secondary-600: oklch(0.50 0.12 160);
+  --color-secondary-700: oklch(0.42 0.10 160);
+
+  /* Warm neutral (stone-based) */
+  --color-neutral-50:  #fafaf9;
+  --color-neutral-100: #f5f5f4;
+  --color-neutral-200: #e7e5e4;
+  --color-neutral-300: #d6d3d1;
+  --color-neutral-400: #a8a29e;
+  --color-neutral-500: #78716c;
+  --color-neutral-600: #57534e;
+  --color-neutral-700: #44403c;
+  --color-neutral-800: #292524;
+  --color-neutral-900: #1c1917;
+  --color-neutral-950: #0c0a09;
+
+  /* Font families */
+  --font-heading: "Outfit", system-ui, -apple-system, sans-serif;
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px oklch(0 0 0 / 0.04);
+  --shadow-sm: 0 1px 3px oklch(0 0 0 / 0.06), 0 1px 2px oklch(0 0 0 / 0.04);
+  --shadow-md: 0 4px 12px oklch(0 0 0 / 0.06), 0 2px 4px oklch(0 0 0 / 0.04);
+  --shadow-lg: 0 12px 24px oklch(0 0 0 / 0.08), 0 4px 8px oklch(0 0 0 / 0.04);
+
+  /* Generous spacing emphasis */
+  --spacing-18: 4.5rem;
+  --spacing-22: 5.5rem;
+}
+
+/* Dark mode via data attribute */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 ```
+
+> **Tailwind v3 legacy:** If your project still uses Tailwind v3, use `tailwind.config.js` with `darkMode: ["selector", '[data-theme="dark"]']` and a `content` array pointing to your component files. See the [Tailwind v4 migration guide](https://tailwindcss.com/docs/upgrade-guide) for details.
 
 #### Branded Button Component
 
@@ -882,6 +888,6 @@ Use this checklist to verify that AI-generated output matches your brand. Run it
 
 ---
 
-> **See also:** [Design-Systems](../Design-Systems/design-systems.md) | [Typography-Color](../Typography-Color/typography-color.md) | [Dark-Mode](../Dark-Mode/dark-mode.md) | [Accessibility](../Accessibility/accessibility.md)
+> **See also:** [Design-Systems](../Design-Systems/design-systems.md) | [Typography-Color](../Typography-Color/typography-color.md) | [Dark-Mode](../Dark-Mode/dark-mode.md) | [Accessibility](../Accessibility/accessibility.md) | [Animation-Motion](../Animation-Motion/animation-motion.md) | [Responsive-Design](../Responsive-Design/responsive-design.md) | [UX-Patterns](../UX-Patterns/ux-patterns.md) | [Mobile-First](../Mobile-First/mobile-first.md)
 >
 > **Last reviewed:** 2026-02

@@ -167,7 +167,7 @@ Linear and cubic-bezier easing feels mechanical. Spring physics produce natural-
 | Snappy | 300 | 24 | Quick, decisive, minimal overshoot |
 | Gentle | 120 | 14 | Soft, slower, slight overshoot |
 | Bouncy | 400 | 10 | Energetic, playful, visible bounce |
-| Stiff | 600 | 30 | Instant-feeling, no overshoot |
+| Stiff | 600 | 30 | Very fast, minimal overshoot |
 
 Use "snappy" for most UI interactions. Reserve "bouncy" for playful interfaces or celebratory moments. Use "stiff" when the animation should feel like a direct response to the user's finger.
 
@@ -283,29 +283,15 @@ When an AI assistant is asked to implement animations or motion design, follow t
 1. Classify the animation by category: micro-interaction (100--200ms), transition (200--500ms), or complex (500ms+).
 2. Start with the shorter end of the range. Only increase duration if the animation feels abrupt when tested.
 3. Use `ease-out` for elements entering the screen, `ease-in` for elements leaving, and `ease-in-out` for elements moving within the viewport.
-4. Define timing values as CSS custom properties or constants so they are consistent across the codebase:
-   ```css
-   :root {
-     --duration-fast: 150ms;
-     --duration-normal: 250ms;
-     --duration-slow: 400ms;
-     --ease-out: cubic-bezier(0.0, 0.0, 0.2, 1);
-     --ease-in: cubic-bezier(0.4, 0.0, 1, 1);
-     --ease-in-out: cubic-bezier(0.4, 0.0, 0.2, 1);
-   }
-   ```
+4. Define timing values as CSS custom properties or constants so they are consistent across the codebase. Use `--duration-fast` (150ms), `--duration-normal` (250ms), `--duration-slow` (400ms) along with easing tokens like `--ease-out`, `--ease-in`, and `--ease-in-out`.
 5. Never hardcode durations or easing values inline. Always reference the tokens.
 
 ### Implementing CSS Transitions
 
 1. Declare transitions on the base state of the element, not on the `:hover` or `.active` state. This ensures the transition plays in both directions (enter and exit).
 2. Transition specific properties, never use `transition: all`. `all` is unpredictable, transitions properties you did not intend, and can cause performance issues.
-3. Combine multiple properties with a single `transition` shorthand:
-   ```css
-   transition: transform var(--duration-fast) var(--ease-out),
-               opacity var(--duration-fast) var(--ease-out);
-   ```
-4. For entrance animations (element appearing in the DOM), use CSS `@keyframes` with `animation-fill-mode: both` since transitions cannot animate from `display: none`.
+3. Combine multiple properties with a single `transition` shorthand, e.g. `transition: transform var(--duration-fast) var(--ease-out), opacity var(--duration-fast) var(--ease-out);`
+4. For entrance animations (element appearing in the DOM), use CSS `@keyframes` with `animation-fill-mode: both`. For animating elements from `display: none`, use `@starting-style` (see Principle 11) combined with `transition-behavior: allow-discrete`.
 5. Always test that the reverse transition (e.g., mouse-leave) also looks smooth and intentional.
 
 ### Building Micro-Interactions
@@ -314,39 +300,15 @@ When an AI assistant is asked to implement animations or motion design, follow t
 2. Define three states for each: **default**, **hover**, **active/pressed**.
 3. Hover state: apply within 100--150ms. Subtle changes only (elevation, background tint, underline).
 4. Active state: apply within 50--100ms. Must be faster than hover to feel responsive. Use `transform: scale(0.97)` or a darker background.
-5. Focus state: always visible for keyboard navigation. Use `:focus-visible` to avoid showing focus rings on mouse clicks:
-   ```css
-   .button:focus-visible {
-     outline: 2px solid var(--color-focus);
-     outline-offset: 2px;
-   }
-   ```
+5. Focus state: always visible for keyboard navigation. Use `:focus-visible` to avoid showing focus rings on mouse clicks. Apply `outline: 2px solid var(--color-focus)` with `outline-offset: 2px`.
 6. Do not animate the focus ring itself -- it should appear instantly for accessibility.
 
-### Using Framer Motion
+### Using Motion (formerly Framer Motion)
 
 1. Use `motion` components as drop-in replacements for HTML elements: `<motion.div>`, `<motion.button>`, etc.
-2. For entrance animations, use the `initial` and `animate` props:
-   ```tsx
-   <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} />
-   ```
-3. For exit animations, wrap the component in `<AnimatePresence>` and add the `exit` prop:
-   ```tsx
-   <AnimatePresence>
-     {isVisible && (
-       <motion.div
-         initial={{ opacity: 0 }}
-         animate={{ opacity: 1 }}
-         exit={{ opacity: 0 }}
-         key="modal"
-       />
-     )}
-   </AnimatePresence>
-   ```
-4. Use `layout` prop for automatic layout animations when elements change position or size:
-   ```tsx
-   <motion.div layout />
-   ```
+2. For entrance animations, use the `initial` and `animate` props: `<motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} />`.
+3. For exit animations, wrap the component in `<AnimatePresence>` and add the `exit` prop. Every child must have a unique `key`.
+4. Use the `layout` prop for automatic layout animations when elements change position or size: `<motion.div layout />`.
 5. Prefer `type: "spring"` with `stiffness: 300, damping: 24` as the default transition for natural-feeling motion.
 6. Use `useReducedMotion()` to disable or simplify animations for users who prefer reduced motion.
 7. Stagger children with `transition={{ staggerChildren: 0.05 }}` on the parent variant for list animations.
@@ -354,31 +316,15 @@ When an AI assistant is asked to implement animations or motion design, follow t
 ### Handling Reduced Motion Preferences
 
 1. Include the global reduced-motion CSS reset in every project (shown in the Principles section).
-2. In JavaScript/React, check the preference before triggering animations:
-   ```ts
-   const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-   ```
-3. In Framer Motion, use the `useReducedMotion()` hook and conditionally set `transition={{ duration: 0 }}`.
+2. In JavaScript/React, check the preference before triggering animations with `window.matchMedia("(prefers-reduced-motion: reduce)").matches`.
+3. In Motion (formerly Framer Motion), use the `useReducedMotion()` hook and conditionally set `transition={{ duration: 0 }}`.
 4. Do not disable all visual feedback for reduced-motion users. Opacity fades and color changes are generally safe. Disable transforms, position shifts, and scale changes.
 5. Test the app with "Reduce motion" enabled in the OS accessibility settings.
 
 ### Optimizing Animation Performance
 
-1. Only animate `transform`, `opacity`, `filter`, and `clip-path`. These run on the GPU compositor thread.
-2. If you must animate `background-color`, use a pseudo-element with `opacity` instead:
-   ```css
-   .button::after {
-     content: "";
-     position: absolute;
-     inset: 0;
-     background: var(--color-hover);
-     opacity: 0;
-     transition: opacity 150ms ease-out;
-   }
-   .button:hover::after {
-     opacity: 1;
-   }
-   ```
+1. Only animate `transform` and `opacity` for guaranteed compositor-thread performance. `filter` and `clip-path` are compositor-friendly in most modern browsers but not guaranteed — prefer them over layout-triggering properties like `width`/`height`/`margin`, but verify in the Performance tab.
+2. If you must animate `background-color`, use a pseudo-element with `opacity` instead. Create a `::after` with `position: absolute; inset: 0; background: var(--color-hover); opacity: 0; transition: opacity 150ms ease-out;` and set `opacity: 1` on hover.
 3. Use `will-change: transform` only immediately before an animation starts. Remove it after. Never set `will-change` on page load for all elements.
 4. For animated lists, apply `contain: layout style paint` to each item to isolate layout recalculations.
 5. Use the browser Performance tab to verify 60fps. Fix any frames that take longer than 16ms.
@@ -1049,8 +995,8 @@ function AnimatedCard({ title, children }: { title: string; children: React.Reac
   );
 }
 
-// Framer Motion integration
-import { motion, useReducedMotion as useFramerReducedMotion } from "framer-motion";
+// Motion (formerly Framer Motion) integration
+import { AnimatePresence, motion, useReducedMotion as useFramerReducedMotion } from "motion/react";
 
 function AnimatedModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const shouldReduce = useFramerReducedMotion();
@@ -1312,6 +1258,6 @@ dialog:not([open])::backdrop {
 
 ---
 
-> **See also:** [Design-Systems](../Design-Systems/design-systems.md) | [Accessibility](../Accessibility/accessibility.md) | [Mobile-First](../Mobile-First/mobile-first.md)
+> **See also:** [Design-Systems](../Design-Systems/design-systems.md) | [Accessibility](../Accessibility/accessibility.md) | [Mobile-First](../Mobile-First/mobile-first.md) | [Typography-Color](../Typography-Color/typography-color.md) | [UX-Patterns](../UX-Patterns/ux-patterns.md)
 >
 > **Last reviewed:** 2026-02

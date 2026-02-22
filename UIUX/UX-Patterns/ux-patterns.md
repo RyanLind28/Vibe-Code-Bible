@@ -50,6 +50,8 @@
 - Return focus to the trigger element when the modal closes.
 - Keep modal content concise. If it scrolls extensively, it should not be a modal.
 
+Modern browsers provide the `<dialog>` element with `showModal()` which handles focus trapping, Escape-to-close, and backdrop automatically. Prefer native `<dialog>` over custom modal implementations. The Popover API (`popover` attribute) is appropriate for non-modal overlays like dropdowns and tooltips.
+
 ### 4. Search
 
 **Instant search.** Show results as the user types with a debounce of 200--300ms. Display a loading indicator during the request. Highlight matching text in results.
@@ -155,6 +157,139 @@ Drag-and-drop enables spatial rearrangement: reordering lists, organizing kanban
 5. **Announce state changes.** Use `aria-live` regions to announce to screen readers: "Item picked up. Position 2 of 5." "Item moved. Now position 3 of 5." "Item dropped. Final position 3 of 5."
 6. **Handle edge cases.** What happens when dragging to an empty list? When the list scrolls during drag? When the user drags outside the valid area?
 
+### 13. Charts and Data Visualization
+
+AI tools frequently generate inaccessible charts. Charts require special attention because they encode information visually.
+
+**Key principles:**
+
+1. **Use colorblind-safe palettes for categorical data.** Never rely on a default rainbow palette. Use palettes designed for color vision deficiency — IBM Design's categorical palette, Okabe-Ito, or a custom set tested with a CVD simulator. Limit categories to 6-8 per chart; beyond that, consider a different visualization.
+2. **Never rely on color alone.** Pair colors with distinct patterns, shapes (different marker types), or direct labels. A bar chart with only color-coded bars is unreadable for colorblind users. Add value labels, a legend with shape indicators, or pattern fills.
+3. **Provide text alternatives for all data.** Every chart must have a summary description (`aria-label` or `<figcaption>`). For critical data, provide an accessible data table as an alternative view (a toggle or expandable section below the chart). Screen readers cannot read SVG line charts.
+4. **Label directly when possible.** Place labels on or near data points/bars instead of relying on a separate legend. Direct labeling reduces the cognitive load of cross-referencing between chart and legend.
+5. **Use semantic elements.** Wrap charts in `<figure>` with a `<figcaption>`. If using SVG, include `role="img"` and `aria-label` on the SVG root.
+6. **Interactive charts need keyboard support.** If users can hover data points for tooltips, those tooltips must also be accessible via keyboard focus (Tab to navigate points, visible tooltip on focus).
+
+### 14. Preventing Duplicate Form Submissions
+
+Users double-click submit buttons, especially on slow connections. Without protection, this creates duplicate records, double charges, or confusing errors.
+
+**Pattern:**
+1. **Disable the submit button immediately on click.** Replace the label with a loading state (spinner + "Saving...").
+2. **Re-enable on completion or error.** If the request fails, restore the button so the user can retry.
+3. **Use a request lock in the handler.** A boolean flag or AbortController prevents concurrent submissions even if the button disable is bypassed (e.g., Enter key).
+4. **Server-side idempotency is the ultimate safeguard.** Client-side prevention is UX; server-side idempotency keys prevent actual duplicate operations.
+
+```tsx
+function SubmitButton({ label = "Save changes", form }: { label?: string; form?: string }) {
+  const [pending, setPending] = useState(false);
+
+  async function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
+    if (pending) return;
+    setPending(true);
+    try {
+      // Submit logic here
+    } finally {
+      setPending(false);
+    }
+  }
+
+  return (
+    <button
+      type="submit"
+      form={form}
+      disabled={pending}
+      aria-busy={pending || undefined}
+      onClick={handleClick}
+    >
+      {pending ? (
+        <>
+          <Spinner size={16} aria-hidden="true" />
+          Saving...
+        </>
+      ) : (
+        label
+      )}
+    </button>
+  );
+}
+```
+
+### 15. Password Visibility Toggle
+
+Password fields should include a toggle to show/hide the password. Users on mobile especially benefit — small keyboards cause frequent typos, and the ability to verify a password before submitting reduces errors.
+
+**Requirements:**
+1. **Default to hidden** (`type="password"`).
+2. **Toggle button inside the input.** Use an eye/eye-off icon. The button must have `aria-label` that reflects the current state: "Show password" or "Hide password."
+3. **Do not clear the input on toggle.** Switching between `type="password"` and `type="text"` must preserve the entered value.
+4. **Announce state changes.** Use `aria-pressed` or update the `aria-label` so screen readers communicate the toggle state.
+5. **Keep `autocomplete="current-password"` or `autocomplete="new-password"`** on the input regardless of visibility — password managers must still work.
+
+### 16. Error Boundaries (Component Failure Isolation)
+
+AI-generated code can fail at runtime in unexpected ways — a missing property, a null reference, a third-party API returning unexpected data. Without isolation, one failing component crashes the entire page.
+
+**Pattern:** Wrap major UI sections in error boundary components that catch rendering errors, display a localized fallback, and keep the rest of the page functional.
+
+**Key rules:**
+1. **Wrap each major section independently.** The sidebar, main content, and each widget/card should have their own error boundary. A failing chart widget should not take down the navigation.
+2. **Provide a useful fallback.** Show a "Something went wrong" message with a retry button — not a blank space or a full-page crash screen.
+3. **Log the error.** Send the error to your monitoring service (Sentry, LogRocket, etc.) from the error boundary's `componentDidCatch` or equivalent.
+4. **Include a retry mechanism.** A "Try again" button that resets the error boundary state and re-attempts rendering.
+
+```tsx
+// React Error Boundary with retry
+import { Component, type ReactNode } from "react";
+
+interface Props {
+  children: ReactNode;
+  fallback?: ReactNode;
+}
+
+interface State {
+  hasError: boolean;
+}
+
+export class ErrorBoundary extends Component<Props, State> {
+  state: State = { hasError: false };
+
+  static getDerivedStateFromError(): State {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, info: React.ErrorInfo) {
+    // Log to monitoring service
+    console.error("ErrorBoundary caught:", error, info.componentStack);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        this.props.fallback ?? (
+          <div role="alert" className="error-boundary-fallback">
+            <p>Something went wrong in this section.</p>
+            <button onClick={() => this.setState({ hasError: false })}>
+              Try again
+            </button>
+          </div>
+        )
+      );
+    }
+    return this.props.children;
+  }
+}
+
+// Usage: wrap each major section
+// <ErrorBoundary>
+//   <DashboardChart />
+// </ErrorBoundary>
+// <ErrorBoundary>
+//   <ActivityFeed />
+// </ErrorBoundary>
+```
+
 ---
 
 ## LLM Instructions
@@ -219,6 +354,28 @@ When an AI assistant is asked to design or implement UI/UX, follow these directi
 4. **Use `DragOverlay` for the dragged item's visual representation** — do not move the original DOM element, which disrupts screen reader context.
 5. **Announce every state change.** Provide live region announcements: "Picked up [item name]. Current position: 2 of 5." "Moved to position 3 of 5." "Dropped at position 3 of 5." "Reorder cancelled."
 6. **For non-sortable drag-and-drop** (e.g., kanban columns, file upload zones), provide a button-based alternative: a "Move to..." menu that lists valid destinations.
+
+### Building Accessible Charts
+
+1. **Use a colorblind-safe categorical palette.** Default palettes in most charting libraries are not CVD-safe. Use Okabe-Ito or a tested custom palette. Limit categories to 6-8 per chart.
+2. **Never encode meaning with color alone.** Pair colors with distinct shapes (circle, square, triangle for scatter plots), patterns (hatched, dotted, solid for bar charts), or direct data labels.
+3. **Wrap every chart in `<figure>` with `<figcaption>`.** Add `role="img"` and a descriptive `aria-label` to the SVG or canvas element summarizing the chart's key insight.
+4. **Provide an accessible data table alternative.** Add a "View as table" toggle below the chart so screen reader users and users who prefer tabular data can access the same information.
+5. **Make interactive charts keyboard-navigable.** If hovering data points shows tooltips, those must also appear on keyboard focus. Use `tabindex="0"` on focusable data points.
+
+### Preventing Duplicate Submissions
+
+1. **Disable the submit button immediately on click** and show a loading indicator (spinner + text like "Saving...").
+2. **Set `aria-busy="true"` on the button** during submission so screen readers announce the busy state.
+3. **Re-enable on completion or error.** On success, navigate or show confirmation. On error, restore the button and show the error.
+4. **Use a request lock in the handler** (boolean flag or AbortController) to prevent Enter key or double-click bypassing the disabled state.
+
+### Implementing Error Boundaries
+
+1. **Wrap each major UI section in an error boundary** — sidebar, main content area, individual widgets or cards. Never use a single boundary for the entire app.
+2. **Display a localized fallback** with a "Try again" button that resets the boundary state. The fallback should match the layout dimensions of the failed component to avoid layout shift.
+3. **Log errors to a monitoring service** from the boundary's catch handler.
+4. **For Next.js App Router projects**, use `error.tsx` files at the route segment level for the same isolation pattern.
 
 ### Designing Notification Systems
 
@@ -767,7 +924,6 @@ function DataTable({ state }: { state: DataState }) {
             {columns.map((col) => (
               <th
                 key={col.key}
-                onClick={() => toggleSort(col.key)}
                 aria-sort={
                   sortKey === col.key
                     ? sortDir === "asc"
@@ -775,12 +931,18 @@ function DataTable({ state }: { state: DataState }) {
                       : "descending"
                     : "none"
                 }
-                style={{ cursor: "pointer" }}
               >
-                {col.label}
-                {sortKey === col.key && (
-                  <span aria-hidden="true">{sortDir === "asc" ? " \u2191" : " \u2193"}</span>
-                )}
+                <button
+                  type="button"
+                  onClick={() => toggleSort(col.key)}
+                  aria-label={`Sort by ${col.label.toLowerCase()}`}
+                  style={{ cursor: "pointer" }}
+                >
+                  {col.label}
+                  {sortKey === col.key && (
+                    <span aria-hidden="true">{sortDir === "asc" ? " \u2191" : " \u2193"}</span>
+                  )}
+                </button>
               </th>
             ))}
           </tr>
@@ -1422,6 +1584,6 @@ function ProfileSection() {
 
 ---
 
-> **See also:** [Accessibility](../Accessibility/accessibility.md) | [Design-Systems](../Design-Systems/design-systems.md) | [Mobile-First](../Mobile-First/mobile-first.md)
+> **See also:** [Accessibility](../Accessibility/accessibility.md) | [Design-Systems](../Design-Systems/design-systems.md) | [Mobile-First](../Mobile-First/mobile-first.md) | [Animation-Motion](../Animation-Motion/animation-motion.md) | [Typography-Color](../Typography-Color/typography-color.md)
 >
 > **Last reviewed:** 2026-02

@@ -111,7 +111,59 @@ Gesture guidelines:
 - **Pull-to-refresh:** Used for refreshing list/feed content. Only use on scrollable lists where the content is expected to change.
 - **Long press:** Used for context menus and selection modes. Always provide the same options via a visible menu or action bar. Long press is the least discoverable gesture.
 
-### 8. Mobile Performance
+### 8. Hover States on Touch Devices
+
+On desktop, `:hover` styles provide visual feedback when the cursor moves over an element. On touch devices, there is no hover — but mobile browsers still apply `:hover` styles on tap and often leave them stuck (the "sticky hover" problem). A button tapped on iOS will keep its hover background color until the user taps somewhere else.
+
+Use the `hover` media feature to restrict hover styles to devices that actually support hover (mouse, trackpad):
+
+```css
+/* Base styles — no hover effect */
+.card {
+  background: var(--color-surface);
+  transition: background-color 150ms ease;
+}
+
+/* Hover only on devices with a pointer that can hover */
+@media (hover: hover) {
+  .card:hover {
+    background: var(--color-surface-hover);
+  }
+}
+
+/* For fine-grained control, combine with pointer */
+@media (hover: hover) and (pointer: fine) {
+  /* Only for mouse/trackpad — not stylus or coarse touch */
+  .row:hover {
+    background: var(--color-bg-muted);
+  }
+}
+```
+
+**Key rules:**
+1. **Wrap all `:hover` styles in `@media (hover: hover)`.** This prevents stuck hover states on touch devices.
+2. **Provide `:active` styles for touch feedback instead.** A brief background-color or scale change on `:active` gives tap feedback on touch devices without the stickiness.
+3. **`:focus-visible` is unaffected.** Focus styles should always apply regardless of input device — do not gate them behind a hover query.
+
+```css
+/* Touch-friendly pattern: hover for mouse, active for touch */
+.button {
+  background: var(--color-primary);
+  transition: background-color 150ms ease, transform 100ms ease;
+}
+
+@media (hover: hover) {
+  .button:hover {
+    background: var(--color-primary-hover);
+  }
+}
+
+.button:active {
+  transform: scale(0.97);
+}
+```
+
+### 9. Mobile Performance
 
 Mobile performance is not desktop performance on a slower connection. Mobile devices have constrained CPU, memory, and bandwidth. Optimization is not optional.
 
@@ -124,7 +176,7 @@ Key performance strategies:
 5. **Bundle size.** On a mid-range phone, every kilobyte of JavaScript takes roughly 2-3x longer to parse and execute than on a desktop. Tree-shake, code-split, and audit your dependencies.
 6. **Font loading.** Use `font-display: swap` or `font-display: optional`. Subset fonts to include only the characters you need. A full Google Font download can be 100KB+; a subset can be 15KB.
 
-### 9. Viewport Meta Tag and Safe Areas
+### 10. Viewport Meta Tag and Safe Areas
 
 The viewport meta tag is the foundation of mobile rendering. Without it, mobile browsers render the page at a virtual desktop width (typically 980px) and then scale it down to fit.
 
@@ -151,7 +203,7 @@ For these to work, you must also opt in via the viewport meta tag:
 
 The `viewport-fit=cover` value tells the browser to extend the layout into the safe area regions, giving you control over how content interacts with hardware features.
 
-### 10. PWA Considerations
+### 11. PWA Considerations
 
 Progressive Web Apps bridge the gap between web and native mobile experiences. For mobile-first applications, consider:
 
@@ -162,7 +214,7 @@ Progressive Web Apps bridge the gap between web and native mobile experiences. F
 
 PWA is not all-or-nothing. Even implementing just a service worker for caching and a manifest for "Add to Home Screen" significantly improves the mobile experience.
 
-### 11. Offline-First Patterns
+### 12. Offline-First Patterns
 
 Offline-first design assumes the network is unreliable and builds the experience around local-first data. The app works offline by default; the network is an enhancement.
 
@@ -182,7 +234,7 @@ Offline-first design assumes the network is unreliable and builds the experience
 3. **Queue offline mutations.** If a user creates, edits, or deletes data while offline, store the mutation in IndexedDB. Replay it when the connection returns (background sync).
 4. **Show connection state.** Display a banner or indicator when the user is offline so they understand why some features may be limited.
 
-### 12. App Shell Architecture
+### 13. App Shell Architecture
 
 The app shell is the minimum HTML, CSS, and JavaScript required to render the application's chrome — the navigation, header, footer, and layout skeleton — without any dynamic content.
 
@@ -220,11 +272,9 @@ When an AI assistant is asked to design or implement mobile-first interfaces, fo
 
 Always write CSS starting from the mobile layout as the default. Use `min-width` media queries to enhance for larger screens. Never write `max-width` queries as the base approach. Structure layouts with CSS Grid or Flexbox. Default to a single-column layout on mobile, expanding to multi-column on tablet and desktop.
 
-```
-Default styles → mobile (single column, stacked)
-@media (min-width: 768px) → tablet (two columns, side-by-side)
-@media (min-width: 1024px) → desktop (three columns, sidebar)
-```
+- Default styles: mobile (single column, stacked)
+- `@media (min-width: 768px)`: tablet (two columns, side-by-side)
+- `@media (min-width: 1024px)`: desktop (three columns, sidebar)
 
 ### Implement Proper Touch Targets
 
@@ -237,6 +287,10 @@ For applications with 3-5 top-level destinations, implement a bottom navigation 
 ### Optimize Mobile Forms
 
 Always set the correct `type` and `inputmode` attributes on inputs. Always provide `autocomplete` attributes. Use `type="text"` with `inputmode="numeric"` for numeric fields that are not true numbers (credit cards, OTPs). Group related fields logically. Use a single-column layout for forms on mobile. Place primary submit actions in the thumb zone.
+
+### Gate Hover Styles for Touch Devices
+
+Wrap all `:hover` CSS rules in `@media (hover: hover)` to prevent sticky hover states on touch devices. Provide `:active` styles as the touch feedback alternative. Never apply hover background changes or hover elevations without the media query gate. Use `@media (hover: hover) and (pointer: fine)` for styles that should only apply to mouse/trackpad users.
 
 ### Handle Safe Areas
 
@@ -261,7 +315,7 @@ A bottom navigation bar on mobile that transitions to a sidebar on desktop:
 .app-layout {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: 100dvh;
   /* Reserve space for the fixed bottom nav */
   padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px));
 }
@@ -314,8 +368,10 @@ A bottom navigation bar on mobile that transitions to a sidebar on desktop:
   color: var(--color-accent);
 }
 
-.nav-item:hover {
-  color: var(--color-text-primary);
+@media (hover: hover) {
+  .nav-item:hover {
+    color: var(--color-text-primary);
+  }
 }
 
 .nav-icon {
@@ -655,8 +711,10 @@ A form with correct input types, autocomplete, and mobile-friendly layout:
   transition: background-color 150ms ease;
 }
 
-.form-submit:hover {
-  background-color: var(--color-accent-hover);
+@media (hover: hover) {
+  .form-submit:hover {
+    background-color: var(--color-accent-hover);
+  }
 }
 
 .form-submit:active {
@@ -800,8 +858,10 @@ A card with properly sized touch targets and appropriate spacing:
   -webkit-tap-highlight-color: transparent;
 }
 
-.card--interactive:hover {
-  box-shadow: var(--shadow-md);
+@media (hover: hover) {
+  .card--interactive:hover {
+    box-shadow: var(--shadow-md);
+  }
 }
 
 .card--interactive:active {
@@ -868,8 +928,15 @@ A card with properly sized touch targets and appropriate spacing:
   transition: background-color 150ms ease;
 }
 
-.card-action-btn:hover {
-  background-color: var(--color-bg-secondary);
+@media (hover: hover) {
+  .card-action-btn:hover {
+    background-color: var(--color-bg-secondary);
+  }
+}
+
+.card-action-btn:focus-visible {
+  outline: 2px solid var(--color-primary, #2563eb);
+  outline-offset: 2px;
 }
 
 .card-action-btn:active {
@@ -882,8 +949,10 @@ A card with properly sized touch targets and appropriate spacing:
   border-color: var(--color-accent);
 }
 
-.card-action-btn--primary:hover {
-  background-color: var(--color-accent-hover);
+@media (hover: hover) {
+  .card-action-btn--primary:hover {
+    background-color: var(--color-accent-hover);
+  }
 }
 
 /* Icon-only action button — needs explicit size */
@@ -903,9 +972,11 @@ A card with properly sized touch targets and appropriate spacing:
   transition: background-color 150ms ease, color 150ms ease;
 }
 
-.card-action-icon:hover {
-  background-color: var(--color-bg-secondary);
-  color: var(--color-text-primary);
+@media (hover: hover) {
+  .card-action-icon:hover {
+    background-color: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+  }
 }
 
 .card-action-icon svg {
@@ -1076,23 +1147,22 @@ registerRoute(
   })
 );
 
-// ---- 6. Offline fallback ----
-self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open("offline-fallback").then((cache) => {
-      return cache.add("/offline.html");
-    })
-  );
-});
+// ---- 6. Offline fallback via Workbox ----
+import { setCatchHandler } from "workbox-routing";
+import { matchPrecache } from "workbox-precaching";
 
-self.addEventListener("fetch", (event) => {
-  if (event.request.mode === "navigate") {
-    event.respondWith(
-      fetch(event.request).catch(() => {
-        return caches.match("/offline.html");
-      })
-    );
+// Pre-cache the offline fallback page
+precacheAndRoute([
+  ...self.__WB_MANIFEST,
+  { url: "/offline.html", revision: null },
+]);
+
+// When any route fails (navigation or otherwise), serve the offline page
+setCatchHandler(async ({ request }) => {
+  if (request.destination === "document") {
+    return matchPrecache("/offline.html") || Response.error();
   }
+  return Response.error();
 });
 ```
 
@@ -1281,6 +1351,6 @@ export function OfflineIndicator() {
 
 ---
 
-> **See also:** [Responsive-Design](../Responsive-Design/responsive-design.md) | [UX-Patterns](../UX-Patterns/ux-patterns.md) | [Animation-Motion](../Animation-Motion/animation-motion.md)
+> **See also:** [Responsive-Design](../Responsive-Design/responsive-design.md) | [UX-Patterns](../UX-Patterns/ux-patterns.md) | [Animation-Motion](../Animation-Motion/animation-motion.md) | [Accessibility](../Accessibility/accessibility.md) | [Dark-Mode](../Dark-Mode/dark-mode.md) | [Design-Systems](../Design-Systems/design-systems.md)
 >
 > **Last reviewed:** 2026-02

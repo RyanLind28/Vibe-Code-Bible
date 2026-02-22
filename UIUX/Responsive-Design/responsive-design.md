@@ -210,7 +210,49 @@ The breakpoint prefixes follow Tailwind's mobile-first convention:
 </div>
 ```
 
-### 11. Testing Responsive Design
+### 11. CSS Logical Properties
+
+Physical CSS properties (`margin-left`, `padding-right`, `border-top`, `text-align: left`) assume a left-to-right (LTR), top-to-bottom writing direction. They break in right-to-left (RTL) languages (Arabic, Hebrew, Farsi) where "start" is the right side.
+
+CSS logical properties replace physical directions with flow-relative ones:
+
+| Physical property | Logical replacement |
+|---|---|
+| `margin-left` / `margin-right` | `margin-inline-start` / `margin-inline-end` |
+| `padding-left` / `padding-right` | `padding-inline-start` / `padding-inline-end` |
+| `margin-top` / `margin-bottom` | `margin-block-start` / `margin-block-end` |
+| `border-left` | `border-inline-start` |
+| `text-align: left` | `text-align: start` |
+| `text-align: right` | `text-align: end` |
+| `left` / `right` (positioning) | `inset-inline-start` / `inset-inline-end` |
+| `width` / `height` | `inline-size` / `block-size` |
+| `margin: 0 auto` | `margin-inline: auto` |
+
+**Shorthand properties** also have logical equivalents:
+
+```css
+/* Physical — breaks in RTL */
+.card {
+  margin-left: 1rem;
+  padding-left: 1.5rem;
+  border-left: 3px solid var(--color-primary);
+  text-align: left;
+}
+
+/* Logical — works in LTR and RTL automatically */
+.card {
+  margin-inline-start: 1rem;
+  padding-inline-start: 1.5rem;
+  border-inline-start: 3px solid var(--color-primary);
+  text-align: start;
+}
+```
+
+**When physical properties are correct:** `env(safe-area-inset-left)` and `env(safe-area-inset-right)` are inherently physical — the notch is on a physical side of the hardware, not a language-direction side. `top`/`bottom` for fixed/sticky positioning are also physical when tied to viewport edges rather than reading flow.
+
+**Rule of thumb:** Default to logical properties for all layout and spacing. Only use physical properties when referring to hardware edges (safe areas) or viewport-fixed positioning.
+
+### 12. Testing Responsive Design
 
 Responsive design must be tested, not assumed:
 
@@ -229,7 +271,7 @@ When an AI assistant is asked to build responsive layouts or work on responsive 
 
 ### Building Responsive Layouts
 
-1. **Always start mobile-first.** Write the base CSS for the smallest screen with no media query. Add `min-width` media queries to progressively enhance for larger screens. Never use `max-width` breakpoints unless overriding a third-party library.
+1. **Always start mobile-first.** Write the base CSS for the smallest screen with no media query. Add `min-width` media queries to progressively enhance for larger screens. Never use `max-width` breakpoints unless overriding a third-party library or implementing progressive disclosure patterns where the base state must be the enhanced view (such as data tables that collapse to cards on small screens).
 
 2. **Use the project's existing breakpoint tokens.** Check the Tailwind config, CSS custom properties, or SCSS variables for defined breakpoints before introducing new ones. If no system exists, default to the Tailwind breakpoint scale (`sm: 640px`, `md: 768px`, `lg: 1024px`, `xl: 1280px`, `2xl: 1536px`).
 
@@ -254,6 +296,10 @@ When an AI assistant is asked to build responsive layouts or work on responsive 
 9. **Prefer intrinsic sizing.** Use `auto-fill` / `auto-fit` with `minmax()` in CSS Grid to let the browser decide how many columns fit. This eliminates the need for many breakpoints.
 
 10. **Always include a viewport meta tag.** If generating an HTML document, include `<meta name="viewport" content="width=device-width, initial-scale=1">`. Without it, mobile browsers render at a desktop width and scale down.
+
+### Use CSS Logical Properties
+
+Default to CSS logical properties (`margin-inline-start`, `padding-inline-end`, `text-align: start`, `inset-inline-start`) instead of physical properties (`margin-left`, `padding-right`, `text-align: left`, `left`). Logical properties automatically support RTL languages without additional CSS. The only exceptions are safe area insets (`env(safe-area-inset-left)`) which are physically directional by nature, and viewport-fixed positioning (`top`, `bottom`) when anchored to hardware edges.
 
 ### "Make This Responsive" Checklist
 
@@ -348,7 +394,7 @@ A sidebar that collapses on mobile, built entirely with CSS Grid and no JavaScri
     gap: 0.25rem;
     padding: 1rem;
     border-top: none;
-    border-right: 1px solid var(--color-border, #e2e8f0);
+    border-inline-end: 1px solid var(--color-border, #e2e8f0);
   }
 
   .dashboard__sidebar {
@@ -522,7 +568,7 @@ A card that switches from vertical to horizontal layout based on its **container
   }
 
   .product-card__price {
-    margin-right: auto;
+    margin-inline-end: auto;
   }
 }
 ```
@@ -681,7 +727,7 @@ Tables are inherently wide. On mobile, horizontal scrolling is a poor experience
 .data-table th,
 .data-table td {
   padding: 0.75rem 1rem;
-  text-align: left;
+  text-align: start;
   border-bottom: 1px solid var(--color-border, #e2e8f0);
 }
 
@@ -703,7 +749,7 @@ Tables are inherently wide. On mobile, horizontal scrolling is a poor experience
     margin: -1px;
     padding: 0;
     overflow: hidden;
-    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
     border: 0;
   }
 
@@ -731,7 +777,7 @@ Tables are inherently wide. On mobile, horizontal scrolling is a poor experience
     color: var(--color-text-muted, #6b7280);
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    margin-right: 1rem;
+    margin-inline-end: 1rem;
   }
 
   .data-table td:first-child {
@@ -885,6 +931,6 @@ Cards with aligned internal sections using subgrid:
 
 ---
 
-> **See also:** [Mobile-First](../Mobile-First/mobile-first.md) | [Design-Systems](../Design-Systems/design-systems.md) | [Typography-Color](../Typography-Color/typography-color.md)
+> **See also:** [Mobile-First](../Mobile-First/mobile-first.md) | [Design-Systems](../Design-Systems/design-systems.md) | [Typography-Color](../Typography-Color/typography-color.md) | [Accessibility](../Accessibility/accessibility.md) | [Animation-Motion](../Animation-Motion/animation-motion.md)
 >
 > **Last reviewed:** 2026-02

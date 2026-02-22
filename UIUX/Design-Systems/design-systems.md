@@ -143,54 +143,39 @@ Large organizations often have teams using React, Vue, Angular, or plain HTML. A
 
 ## LLM Instructions
 
-```
-You are a design systems architect. When building or maintaining a design system:
+When an AI assistant is asked to build or maintain a design system, follow these directives:
 
-1. DESIGN TOKEN SYSTEMS:
-   - Define a complete token set covering: color palettes (with numeric scales like 50-950),
-     spacing (based on a 4px or 8px grid), typography (font families, sizes, weights,
-     line heights, letter spacing), shadows (sm/md/lg/xl), border radii, and transition durations.
-   - Structure tokens in three tiers: global (raw values), semantic/alias (purpose-driven
-     references like --color-primary, --color-surface, --color-on-surface), and component-level
-     (scoped overrides like --button-bg).
-   - Output tokens as CSS custom properties on :root. If the project uses Tailwind, also output
-     a tailwind.config.js theme extension that maps to the same token values.
-   - Always include semantic tokens for surfaces, borders, text (primary, secondary, muted),
-     and interactive states (hover, active, focus, disabled).
+### Design Token Systems
 
-2. COMPONENT API DESIGN:
-   - Define component props using TypeScript interfaces with JSDoc comments.
-   - Include a variant prop (visual style), size prop (sm/md/lg), and forward all remaining
-     HTML attributes via ComponentPropsWithoutRef or equivalent.
-   - Use forwardRef so the underlying DOM element is accessible to consumers.
-   - Use cva (class-variance-authority) or a similar utility to map variant/size combinations
-     to class names when using Tailwind CSS.
-   - Ensure every interactive component is keyboard accessible and includes appropriate ARIA
-     attributes. Reference the Accessibility guide for specific patterns.
-   - Default to the most common variant and size (usually "primary" and "md").
+1. Define a complete token set covering: color palettes (with numeric scales like 50--950), spacing (based on a 4px or 8px grid), typography (font families, sizes, weights, line heights, letter spacing), shadows (sm/md/lg/xl), border radii, and transition durations.
+2. Structure tokens in three tiers: global (raw values), semantic/alias (purpose-driven references like `--color-primary`, `--color-surface`, `--color-on-surface`), and component-level (scoped overrides like `--button-bg`).
+3. Output tokens as CSS custom properties on `:root`. If the project uses Tailwind, also output a `tailwind.config.js` theme extension that maps to the same token values.
+4. Always include semantic tokens for surfaces, borders, text (primary, secondary, muted), and interactive states (hover, active, focus, disabled).
 
-3. THEMED COMPONENT LIBRARIES:
-   - Implement theming via CSS custom properties with a data-theme attribute on the root element.
-   - Define at minimum a light and dark theme. Each theme overrides the same set of semantic tokens.
-   - Provide a ThemeProvider React component (or equivalent) that:
-     a. Reads the user's system preference via prefers-color-scheme.
-     b. Checks for a stored preference in localStorage.
-     c. Applies the correct data-theme attribute.
-     d. Exposes a toggle function via context.
-   - Never hardcode color values in components. Always reference semantic tokens.
+### Component API Design
 
-4. STORYBOOK STORIES:
-   - Generate a default story that renders the component with default props.
-   - Generate a story for every variant, every size, and key states (disabled, loading, error).
-   - Use Storybook's argTypes to expose interactive controls for all props.
-   - Add a "Playground" story that enables all controls for free-form testing.
-   - Include JSDoc or MDX documentation blocks explaining usage, do/don't guidance,
-     and accessibility notes.
-   - Use decorators to wrap stories in a ThemeProvider so theme switching works in Storybook.
+1. Define component props using TypeScript interfaces with JSDoc comments.
+2. Include a `variant` prop (visual style), `size` prop (sm/md/lg), and forward all remaining HTML attributes via `ComponentPropsWithoutRef` or equivalent.
+3. Use `forwardRef` so the underlying DOM element is accessible to consumers.
+4. Use `cva` (class-variance-authority) or a similar utility to map variant/size combinations to class names when using Tailwind CSS.
+5. Ensure every interactive component is keyboard accessible and includes appropriate ARIA attributes. Reference the Accessibility guide for specific patterns.
+6. Default to the most common variant and size (usually "primary" and "md").
 
-Output: Clean, production-ready code with TypeScript types, proper exports, and inline comments
-explaining non-obvious decisions. Follow the project's existing formatting and import conventions.
-```
+### Themed Component Libraries
+
+1. Implement theming via CSS custom properties with a `data-theme` attribute on the root element.
+2. Define at minimum a light and dark theme. Each theme overrides the same set of semantic tokens.
+3. Provide a ThemeProvider React component (or equivalent) that: reads the user's system preference via `prefers-color-scheme`, checks for a stored preference in `localStorage`, applies the correct `data-theme` attribute, and exposes a toggle function via context.
+4. Never hardcode color values in components. Always reference semantic tokens.
+
+### Storybook Stories
+
+1. Generate a default story that renders the component with default props.
+2. Generate a story for every variant, every size, and key states (disabled, loading, error).
+3. Use Storybook's `argTypes` to expose interactive controls for all props.
+4. Add a "Playground" story that enables all controls for free-form testing.
+5. Include JSDoc or MDX documentation blocks explaining usage, do/don't guidance, and accessibility notes.
+6. Use decorators to wrap stories in a ThemeProvider so theme switching works in Storybook.
 
 ---
 
@@ -377,7 +362,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800",
+          "bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800",
         secondary:
           "bg-neutral-100 text-neutral-900 hover:bg-neutral-200 active:bg-neutral-300",
         outline:
@@ -783,7 +768,8 @@ export interface InputProps
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ label, error, description, className, id, ...props }, ref) => {
-    const inputId = id || React.useId();
+    const generatedId = React.useId();
+    const inputId = id || generatedId;
     const errorId = error ? `${inputId}-error` : undefined;
     const descId = description ? `${inputId}-desc` : undefined;
 
@@ -815,9 +801,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             "text-neutral-900 dark:text-neutral-100",
             "placeholder:text-neutral-400",
             "transition-colors duration-150",
-            "focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-400",
+            "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
             "disabled:cursor-not-allowed disabled:opacity-50",
-            error && "border-red-500 focus:ring-red-400 focus:border-red-500",
+            error && "border-red-500 focus:ring-red-400 focus:border-red-400",
             className
           )}
           aria-invalid={error ? "true" : undefined}
@@ -906,7 +892,7 @@ const indigoPalette = generateOklchRamp(0.55, 0.22, 285);
 // {
 //   "50":  "oklch(0.97 0.033 285)",
 //   "100": "oklch(0.93 0.099 285)",
-//   "200": "oklch(0.86 0.187 285)",
+//   "200": "oklch(0.86 0.099 285)",
 //   "300": "oklch(0.76 0.187 285)",
 //   "400": "oklch(0.66 0.187 285)",
 //   "500": "oklch(0.55 0.220 285)",
@@ -937,18 +923,53 @@ console.log(`:root {\n${rampToCSS("primary", indigoPalette)}\n}`);
 
 ## Common Mistakes
 
-- **Hardcoding color values in components.** Every `#3b82f6` scattered across your codebase is a future inconsistency. Use tokens. Always.
-- **Skipping semantic tokens and referencing global tokens directly.** Writing `var(--blue-600)` in a component means your dark theme has no opportunity to remap that value. Use `var(--color-primary)` instead.
-- **Overloading a single component with too many props.** If a component accepts 20+ props, it is doing too much. Break it into composable pieces.
-- **Not forwarding refs.** Consumers will need to focus buttons, measure containers, and scroll to elements. Always use `forwardRef`.
-- **Building a design system before you have patterns to extract.** Do not design in the abstract. Build three real screens first, then extract the repeated patterns into shared components.
-- **Ignoring accessibility in the design system.** If the Button component is not keyboard accessible, every button in the entire product is broken. Build a11y into the system layer, not the feature layer.
-- **Documenting components only with code comments.** Written docs and interactive Storybook examples are how other developers (and future you) will learn the system. Undocumented components get reimplemented.
-- **Choosing a UI framework based on GitHub stars instead of actual needs.** Evaluate bundle size, accessibility support, customizability, and community activity. A framework that fights your design is worse than no framework.
-- **Not versioning your design system.** When the system is consumed by multiple apps, breaking changes without semver cause production incidents. Publish packages with proper versioning and changelogs.
+### 1. Hardcoding color values instead of using tokens
+
+**Wrong:** `#3b82f6` scattered across your codebase in individual components. Every instance is a future inconsistency.
+**Fix:** Define `--color-primary` in your token system and reference it everywhere: `background-color: var(--color-primary);`. Use tokens. Always.
+
+### 2. Skipping semantic tokens and referencing global tokens directly
+
+**Wrong:** Writing `var(--blue-600)` in a component. Your dark theme has no opportunity to remap that value.
+**Fix:** Use semantic tokens like `var(--color-primary)` instead of global tokens like `var(--blue-600)`. Semantic tokens allow each theme to remap values independently.
+
+### 3. Overloading a single component with too many props
+
+**Wrong:** A component that accepts 20+ props, trying to handle every possible use case in one monolithic API.
+**Fix:** Break it into composable pieces. Use composition (children, slots, compound components) instead of configuration props.
+
+### 4. Not forwarding refs
+
+**Wrong:** A component that wraps a DOM element but does not expose a ref. Consumers cannot focus, measure, or scroll to it.
+**Fix:** Always use `React.forwardRef` so the underlying DOM element is accessible to consumers for imperative operations.
+
+### 5. Building a design system before you have patterns to extract
+
+**Wrong:** Designing an abstract component library before building any real product screens. You end up with components nobody needs and missing the ones they do.
+**Fix:** Build three real screens first, then extract the repeated patterns into shared components. Let real usage drive the API.
+
+### 6. Ignoring accessibility in the design system
+
+**Wrong:** Shipping a Button component that is not keyboard accessible. Every button in the entire product inherits that failure.
+**Fix:** Build accessibility into the system layer, not the feature layer. Every interactive component must support keyboard navigation, focus management, and appropriate ARIA attributes from day one.
+
+### 7. Documenting components only with code comments
+
+**Wrong:** The only documentation for a component is inline comments in the source file. Other developers cannot discover usage patterns, variants, or do/don't guidance.
+**Fix:** Maintain written docs and interactive Storybook examples. Undocumented components get reimplemented because nobody knows they exist.
+
+### 8. Choosing a UI framework based on GitHub stars instead of actual needs
+
+**Wrong:** Picking the most popular framework without evaluating whether it fits your project's requirements.
+**Fix:** Evaluate bundle size, accessibility support, customizability, and community activity. A framework that fights your design is worse than no framework.
+
+### 9. Not versioning your design system
+
+**Wrong:** Pushing breaking changes to the design system without any versioning. Multiple consuming apps break silently in production.
+**Fix:** Publish your design system as a versioned package with semantic versioning (semver) and a changelog. Breaking changes get a major version bump and a migration guide.
 
 ---
 
-> **See also:** [Accessibility](../Accessibility/accessibility.md) | [Typography-Color](../Typography-Color/typography-color.md) | [Dark-Mode](../Dark-Mode/dark-mode.md)
+> **See also:** [Brand-Identity](../Brand-Identity/brand-identity.md) | [Accessibility](../Accessibility/accessibility.md) | [Typography-Color](../Typography-Color/typography-color.md) | [Dark-Mode](../Dark-Mode/dark-mode.md) | [Responsive-Design](../Responsive-Design/responsive-design.md) | [UX-Patterns](../UX-Patterns/ux-patterns.md)
 >
 > **Last reviewed:** 2026-02

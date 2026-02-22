@@ -283,7 +283,18 @@ Gradients add visual richness when used intentionally. Modern CSS gradients in `
 - Provide a solid color fallback for `forced-colors` mode.
 - Avoid gradients on interactive elements (buttons) unless it is a deliberate brand choice — they can make hover/active state changes less perceptible.
 
-### 12. Brand Color Derivation (Single Hex to Full Palette)
+### 12. Modern CSS Color Functions
+
+CSS now provides powerful functions for deriving and manipulating colors directly in stylesheets, reducing the need for JavaScript-based palette generation:
+
+- **`color-mix()`** — Blend two colors in any color space: `color-mix(in oklch, var(--primary) 70%, white)`. Use this for hover states, tints, and shades without defining every shade manually.
+- **Relative color syntax** — Derive variants from a base: `oklch(from var(--primary) calc(l + 0.1) c h)`. Adjust lightness, chroma, or hue relative to any existing color.
+- **`text-wrap: balance`** — Evenly distribute heading text across lines to avoid awkward short last lines. Apply to headings: `h1, h2, h3 { text-wrap: balance; }`.
+- **`text-wrap: pretty`** — Avoid orphaned words in body text. Apply to paragraphs: `p { text-wrap: pretty; }`.
+
+These are supported in all major browsers as of 2024 and are production-ready.
+
+### 13. Brand Color Derivation (Single Hex to Full Palette)
 
 Given a single brand color, you can algorithmically derive a complete design system palette. The process:
 
@@ -328,11 +339,7 @@ When an AI assistant is asked to work with typography and color, it should follo
 
 ### Checking Contrast Ratios
 
-1. **Use the WCAG relative luminance formula.** When asked to check contrast, calculate relative luminance for both colors and apply the contrast ratio formula:
-   ```
-   L1 = lighter luminance, L2 = darker luminance
-   ratio = (L1 + 0.05) / (L2 + 0.05)
-   ```
+1. **Use the WCAG relative luminance formula.** When asked to check contrast, calculate relative luminance for both colors and apply the contrast ratio formula. Verify all pairings meet WCAG AA minimums: contrast ratio = (L1 + 0.05) / (L2 + 0.05) where L1 is the lighter luminance and L2 is the darker.
 
 2. **Report results against both AA and AAA** for both normal and large text thresholds.
 
@@ -1104,6 +1111,6 @@ console.log(paletteToCSS(palette));
 
 ---
 
-> **See also:** [Design-Systems](../Design-Systems/design-systems.md) | [Accessibility](../Accessibility/accessibility.md) | [Dark-Mode](../Dark-Mode/dark-mode.md)
+> **See also:** [Brand-Identity](../Brand-Identity/brand-identity.md) | [Design-Systems](../Design-Systems/design-systems.md) | [Accessibility](../Accessibility/accessibility.md) | [Dark-Mode](../Dark-Mode/dark-mode.md) | [Responsive-Design](../Responsive-Design/responsive-design.md) | [Mobile-First](../Mobile-First/mobile-first.md)
 >
 > **Last reviewed:** 2026-02

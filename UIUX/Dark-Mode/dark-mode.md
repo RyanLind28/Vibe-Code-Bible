@@ -184,6 +184,21 @@ The CSS `color-scheme` property tells the browser which color schemes your page 
 
 **Always set `color-scheme` when implementing dark mode.** Without it, native controls look jarring — light scrollbars on a dark page, white input backgrounds in a dark form.
 
+The CSS `light-dark()` function (supported in all major browsers since 2024) simplifies theme-aware values by combining both modes in a single declaration. It works in conjunction with the `color-scheme` property:
+
+```css
+:root {
+  color-scheme: light dark;
+}
+
+body {
+  color: light-dark(#1a1a1a, #e5e5e5);
+  background: light-dark(#ffffff, #0a0a0a);
+}
+```
+
+`light-dark()` is ideal for simple token definitions where the only difference between themes is the color value. For more complex token architectures with multiple elevation levels and brand-specific palettes, the `[data-theme]` selector approach shown in the examples remains more flexible.
+
 ---
 
 ## LLM Instructions
@@ -194,12 +209,11 @@ When an AI assistant is asked to implement dark mode, follow these directives:
 
 Always use CSS custom properties (custom properties on `:root` or `[data-theme]` selectors) for theming. Never hard-code color values in component styles. Define a complete set of semantic tokens and provide light and dark resolutions.
 
-```
 Structure your token system as:
+
 1. Primitive tokens (raw values, defined once)
 2. Semantic tokens (intent-based, redefined per theme)
 3. Component tokens (optional, reference semantic tokens)
-```
 
 Apply the dark theme using a `data-theme="dark"` attribute on the `<html>` element, or a `.dark` class. Prefer `data-theme` for semantic clarity.
 
@@ -324,7 +338,7 @@ A full CSS custom property system with light and dark theme tokens:
   color-scheme: dark;
 
   /* Backgrounds — dark gray, NOT pure black */
-  --color-bg-primary: #121212;
+  --color-bg-primary: #0a0a0a;
   --color-bg-secondary: #1a1a1a;
   --color-bg-tertiary: #1e1e1e;
 
@@ -768,6 +782,8 @@ function ThemeAwareImage({ lightSrc, darkSrc, alt, ...props }) {
 
 ### 5. Tailwind CSS Dark Mode Setup (`darkMode: 'class'`)
 
+> **Tailwind v4:** Use CSS-based configuration with `@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));` in your CSS file instead of `tailwind.config.js`. The config below is for Tailwind v3 projects.
+
 ```js
 // tailwind.config.js
 /** @type {import('tailwindcss').Config} */
@@ -824,7 +840,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       attribute="data-theme"       // Sets data-theme on <html>
       defaultTheme="system"        // Respect OS preference by default
       enableSystem                 // Listen to prefers-color-scheme
-      disableTransitionOnChange    // Prevent flash during theme switch
+      disableTransitionOnChange    {/* Prevents a flash during SSR hydration. For user-initiated toggles where you want smooth transitions, omit this prop and add CSS transitions to body instead. */}
       storageKey="theme"           // localStorage key
     >
       {children}
@@ -968,6 +984,6 @@ body {
 
 ---
 
-> **See also:** [Design-Systems](../Design-Systems/design-systems.md) | [Typography-Color](../Typography-Color/typography-color.md) | [Accessibility](../Accessibility/accessibility.md)
+> **See also:** [Brand-Identity](../Brand-Identity/brand-identity.md) | [Design-Systems](../Design-Systems/design-systems.md) | [Typography-Color](../Typography-Color/typography-color.md) | [Accessibility](../Accessibility/accessibility.md) | [Responsive-Design](../Responsive-Design/responsive-design.md) | [Animation-Motion](../Animation-Motion/animation-motion.md)
 >
 > **Last reviewed:** 2026-02

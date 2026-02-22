@@ -186,7 +186,7 @@ Accessibility is increasingly a legal obligation, not just a best practice.
 |------------|-------------|-------|
 | **ADA** (Americans with Disabilities Act) | United States | Applies to "places of public accommodation" — courts have consistently ruled this includes websites. No explicit technical standard, but WCAG 2.1 AA is the de facto benchmark. |
 | **Section 508** | United States | Applies to federal agencies and federally funded organizations. Requires WCAG 2.0 AA conformance. |
-| **EAA** (European Accessibility Act) | European Union | Takes effect June 28, 2025. Requires digital products and services sold in the EU to meet accessibility standards (EN 301 549, which references WCAG 2.1 AA). |
+| **EAA** (European Accessibility Act) | European Union | In effect since June 28, 2025. Requires digital products and services sold in the EU to meet accessibility standards (EN 301 549, which references WCAG 2.1 AA). |
 | **AODA** | Ontario, Canada | Requires WCAG 2.0 AA for public sector and large organizations. |
 | **EN 301 549** | European Union | The harmonized European standard for ICT accessibility. References WCAG 2.1 AA for web content. |
 
@@ -228,8 +228,8 @@ input[type="radio"],
 [role="button"],
 [role="tab"],
 [role="menuitem"] {
-  min-height: 44px;
-  min-width: 44px;
+  min-height: 48px;
+  min-width: 48px;
 }
 
 /* For small visual elements, use padding to expand touch area */
@@ -244,79 +244,75 @@ input[type="radio"],
 }
 ```
 
+### 13. Reduced Motion
+
+Users can enable `prefers-reduced-motion: reduce` in their OS settings to indicate discomfort with animated content. Respecting this preference is a WCAG 2.3.3 requirement and a core accessibility obligation.
+
+**Minimum implementation:**
+
+- Include a global CSS reset that removes transitions and animations when the preference is active.
+- Keep opacity fades and color changes — these are generally safe.
+- Remove transforms, position shifts, and scale changes.
+- Never disable all visual feedback — users still need to know the UI is responding.
+
+See `../Animation-Motion/animation-motion.md` for detailed implementation patterns and Framer Motion / CSS integration.
+
 ---
 
 ## LLM Instructions
 
-```
-You are a web accessibility specialist. When auditing, building, or reviewing UI code:
+When an AI assistant is asked to audit, build, or review UI code for accessibility, follow these directives:
 
-1. AUDIT PAGES FOR ACCESSIBILITY:
-   - Check all images for meaningful alt text (or alt="" for decorative images).
-   - Verify every form input has an associated <label> element (via for/id or wrapping).
-   - Check color contrast ratios: 4.5:1 for normal text, 3:1 for large text and UI components.
-   - Verify heading hierarchy is logical (h1 → h2 → h3, no skipped levels).
-   - Confirm all interactive elements are reachable via keyboard (Tab) and activatable (Enter/Space).
-   - Check for focus visibility — every focused element must have a visible indicator.
-   - Verify that ARIA attributes are used correctly (valid roles, required properties present,
-     states updating dynamically).
-   - Check that dynamic content changes are announced via aria-live regions.
-   - Test that modals trap focus and return focus to the trigger on close.
-   - Verify skip navigation links exist and work.
-   Output: A checklist with pass/fail status, severity (critical/major/minor), element reference,
-   and specific fix instructions for each failure.
+### Audit Pages for Accessibility
 
-2. WRITE SEMANTIC HTML:
-   - Use the most specific native HTML element for every purpose: <button> for actions,
-     <a> for navigation, <nav> for navigation landmarks, <main> for primary content,
-     <header>/<footer> for page/section headers and footers, <aside> for complementary content.
-   - Structure headings hierarchically. Each page should have exactly one <h1>.
-   - Use <ul>/<ol> for lists. Use <table> with <thead>, <th>, and scope attributes for data tables.
-   - Use <fieldset> and <legend> to group related form controls.
-   - Never use <div> or <span> for interactive elements.
+1. Check all images for meaningful alt text (or `alt=""` for decorative images).
+2. Verify every form input has an associated `<label>` element (via `for`/`id` or wrapping).
+3. Check color contrast ratios: 4.5:1 for normal text, 3:1 for large text and UI components.
+4. Verify heading hierarchy is logical (`h1` → `h2` → `h3`, no skipped levels).
+5. Confirm all interactive elements are reachable via keyboard (Tab) and activatable (Enter/Space).
+6. Check for focus visibility — every focused element must have a visible indicator.
+7. Verify that ARIA attributes are used correctly (valid roles, required properties present, states updating dynamically).
+8. Check that dynamic content changes are announced via `aria-live` regions.
+9. Test that modals trap focus and return focus to the trigger on close.
+10. Verify skip navigation links exist and work.
 
-3. IMPLEMENT ARIA CORRECTLY:
-   - Follow the first rule of ARIA: do not use ARIA if a native HTML element provides the
-     semantics and behavior you need.
-   - For custom widgets (tabs, accordions, comboboxes, dialogs), implement the full ARIA
-     Authoring Practices pattern including all required roles, properties, states, and
-     keyboard interactions.
-   - Always provide an accessible name for interactive elements: visible label, aria-label,
-     or aria-labelledby.
-   - Use aria-describedby to associate help text, error messages, and additional descriptions.
-   - Use aria-live="polite" for non-urgent dynamic updates and aria-live="assertive" or
-     role="alert" for errors and critical notifications.
-   - Update aria-expanded, aria-selected, aria-checked, and aria-pressed dynamically as state changes.
+Output a checklist with pass/fail status, severity (critical/major/minor), element reference, and specific fix instructions for each failure.
 
-4. HANDLE FOCUS MANAGEMENT:
-   - When opening a modal/dialog, move focus to the first focusable element inside (or the
-     dialog itself if it has a label).
-   - Trap focus within the modal: Tab from the last focusable element cycles to the first,
-     Shift+Tab from the first cycles to the last.
-   - On closing a modal, return focus to the element that triggered it.
-   - On SPA route changes, move focus to the new page's main heading or main content area.
-   - Never use tabindex > 0. Use tabindex="0" for custom focusable elements and tabindex="-1"
-     for elements that receive programmatic focus only.
-   - Ensure focus order matches visual reading order.
+### Write Semantic HTML
 
-5. CREATE ACCESSIBLE FORM PATTERNS:
-   - Every input must have a visible, persistent <label> (not just a placeholder).
-   - Mark required fields with the required attribute and indicate them visually
-     (asterisk or "required" text).
-   - Display inline error messages below the relevant field. Associate errors with their input
-     using aria-describedby.
-   - Use an aria-live="polite" region or role="alert" to announce error summaries to
-     screen readers.
-   - On form submission failure, move focus to the first field with an error or to an
-     error summary at the top of the form.
-   - Use autocomplete attributes for common fields (name, email, tel, address, cc-number).
-   - Group related inputs (radio buttons, checkboxes, address fields) in a <fieldset>
-     with a descriptive <legend>.
+1. Use the most specific native HTML element for every purpose: `<button>` for actions, `<a>` for navigation, `<nav>` for navigation landmarks, `<main>` for primary content, `<header>`/`<footer>` for page/section headers and footers, `<aside>` for complementary content.
+2. Structure headings hierarchically. Each page should have exactly one `<h1>`.
+3. Use `<ul>`/`<ol>` for lists. Use `<table>` with `<thead>`, `<th>`, and `scope` attributes for data tables.
+4. Use `<fieldset>` and `<legend>` to group related form controls.
+5. Never use `<div>` or `<span>` for interactive elements.
 
-Output: Clean, semantic, accessible code with inline comments explaining accessibility
-decisions. Include ARIA attributes, keyboard handling, and focus management. Flag any
-areas where manual testing with a screen reader is recommended.
-```
+### Implement ARIA Correctly
+
+1. Follow the first rule of ARIA: do not use ARIA if a native HTML element provides the semantics and behavior you need.
+2. For custom widgets (tabs, accordions, comboboxes, dialogs), implement the full ARIA Authoring Practices pattern including all required roles, properties, states, and keyboard interactions.
+3. Always provide an accessible name for interactive elements: visible label, `aria-label`, or `aria-labelledby`.
+4. Use `aria-describedby` to associate help text, error messages, and additional descriptions.
+5. Use `aria-live="polite"` for non-urgent dynamic updates and `aria-live="assertive"` or `role="alert"` for errors and critical notifications.
+6. Update `aria-expanded`, `aria-selected`, `aria-checked`, and `aria-pressed` dynamically as state changes.
+
+### Handle Focus Management
+
+1. When opening a modal/dialog, move focus to the first focusable element inside (or the dialog itself if it has a label).
+2. Trap focus within the modal: Tab from the last focusable element cycles to the first, Shift+Tab from the first cycles to the last.
+3. On closing a modal, return focus to the element that triggered it.
+4. On SPA route changes, move focus to the new page's main heading or main content area.
+5. Never use `tabindex` > 0. Use `tabindex="0"` for custom focusable elements and `tabindex="-1"` for elements that receive programmatic focus only.
+6. Ensure focus order matches visual reading order.
+
+### Create Accessible Form Patterns
+
+1. Every input must have a visible, persistent `<label>` (not just a placeholder).
+2. Mark required fields with the `required` attribute and indicate them visually (asterisk or "required" text).
+3. Display inline error messages below the relevant field. Associate errors with their input using `aria-describedby`.
+4. Use an `aria-live="polite"` region or `role="alert"` to announce error summaries to screen readers.
+5. On form submission failure, move focus to the first field with an error or to an error summary at the top of the form.
+6. Use `autocomplete` attributes for common fields (`name`, `email`, `tel`, `address`, `cc-number`).
+7. Group related inputs (radio buttons, checkboxes, address fields) in a `<fieldset>` with a descriptive `<legend>`.
 
 ---
 
@@ -855,7 +851,7 @@ Use this checklist to audit any web page. Each item maps to WCAG 2.2 AA success 
 - [ ] Consistent navigation and identification across pages (WCAG 3.2.3, 3.2.4)
 
 ### Robust
-- [ ] HTML validates without major errors (WCAG 4.1.1)
+- [ ] HTML validates without major errors (good practice; WCAG 4.1.1 was removed in WCAG 2.2)
 - [ ] All interactive elements have accessible names (WCAG 4.1.2)
 - [ ] ARIA roles, states, and properties are valid and complete (WCAG 4.1.2)
 - [ ] Status messages are announced without receiving focus (WCAG 4.1.3)
@@ -1144,6 +1140,6 @@ export function Tabs({ tabs, defaultTab, label }: TabsProps) {
 
 ---
 
-> **See also:** [Design-Systems](../Design-Systems/design-systems.md) | [UX-Patterns](../UX-Patterns/ux-patterns.md) | [Typography-Color](../Typography-Color/typography-color.md) | [Animation-Motion](../Animation-Motion/animation-motion.md)
+> **See also:** [Design-Systems](../Design-Systems/design-systems.md) | [UX-Patterns](../UX-Patterns/ux-patterns.md) | [Typography-Color](../Typography-Color/typography-color.md) | [Animation-Motion](../Animation-Motion/animation-motion.md) | [Mobile-First](../Mobile-First/mobile-first.md) | [Dark-Mode](../Dark-Mode/dark-mode.md)
 >
 > **Last reviewed:** 2026-02

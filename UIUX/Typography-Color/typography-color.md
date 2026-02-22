@@ -216,6 +216,84 @@ Contrast ratios are necessary but not sufficient. Accessible color use requires 
 - **Dark mode:** Do not simply invert colors. Rebuild the palette for dark backgrounds — reduce chroma to avoid neon-like vibration, and verify all contrast ratios again.
 - **High contrast mode:** Test with Windows High Contrast Mode and `forced-colors` media query. Ensure the interface remains usable when the OS overrides your colors.
 
+### 11. Gradient Design Patterns
+
+Gradients add visual richness when used intentionally. Modern CSS gradients in `oklch` produce smoother, more vibrant results than `hsl` or `rgb` gradients.
+
+**oklch gradients avoid muddy midpoints.** In `hsl`, a gradient from blue to yellow passes through a desaturated gray-green middle. In `oklch`, the interpolation follows a perceptually uniform path, producing vibrant intermediates.
+
+```css
+/* oklch gradient — vibrant, smooth interpolation */
+.gradient-hero {
+  background: linear-gradient(
+    135deg in oklch,
+    oklch(0.55 0.22 285),  /* indigo */
+    oklch(0.70 0.18 160)   /* teal */
+  );
+}
+
+/* Specify interpolation color space explicitly */
+.gradient-warm {
+  background: linear-gradient(
+    to right in oklch,
+    oklch(0.65 0.25 30),   /* coral */
+    oklch(0.75 0.20 60)    /* amber */
+  );
+}
+```
+
+**Gradient text:** Apply a gradient to text using `background-clip: text`. Use sparingly — only on headings or hero text, never on body text.
+
+```css
+.gradient-text {
+  background: linear-gradient(135deg in oklch, oklch(0.55 0.22 285), oklch(0.65 0.20 330));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* Fallback for older browsers */
+  -webkit-text-fill-color: transparent;
+}
+
+/* Ensure accessible contrast: gradient text on colored bg needs testing */
+@media (forced-colors: active) {
+  .gradient-text {
+    background: none;
+    color: CanvasText;
+    -webkit-text-fill-color: CanvasText;
+  }
+}
+```
+
+**Mesh gradients:** For complex multi-color backgrounds, use radial gradients layered together:
+
+```css
+.mesh-gradient {
+  background:
+    radial-gradient(at 20% 30%, oklch(0.80 0.15 285 / 0.6) 0%, transparent 50%),
+    radial-gradient(at 80% 20%, oklch(0.75 0.12 160 / 0.5) 0%, transparent 50%),
+    radial-gradient(at 50% 80%, oklch(0.85 0.10 60 / 0.4) 0%, transparent 50%),
+    oklch(0.97 0.01 285);
+}
+```
+
+**Guidelines for gradient usage:**
+- Use gradients for hero sections, feature highlights, and decorative backgrounds.
+- Keep gradients to 2--3 colors maximum. More colors create visual noise.
+- Ensure any text on a gradient background meets contrast requirements at every point of the gradient.
+- Provide a solid color fallback for `forced-colors` mode.
+- Avoid gradients on interactive elements (buttons) unless it is a deliberate brand choice — they can make hover/active state changes less perceptible.
+
+### 12. Brand Color Derivation (Single Hex to Full Palette)
+
+Given a single brand color, you can algorithmically derive a complete design system palette. The process:
+
+1. **Convert to oklch.** Extract the lightness, chroma, and hue.
+2. **Generate the shade ramp.** Create 11 shades (50--950) by adjusting lightness while keeping hue constant and tapering chroma at the extremes.
+3. **Derive semantic colors.** Use hue rotation for complementary, analogous, and triadic colors. Generate each with the same shade ramp algorithm.
+4. **Derive the neutral palette.** Take the brand color's hue, reduce chroma to near-zero (0.005--0.01), and generate a lightness ramp. This produces warm or cool grays that harmonize with the brand.
+
+This approach is detailed in Example 5 below with a working JavaScript implementation.
+
 ---
 
 ## LLM Instructions
@@ -850,6 +928,125 @@ console.table(checkPalette(palette));
 - Includes a batch checker (`checkPalette`) for validating an entire design system at once.
 - Reports both pass/fail booleans and a human-readable summary string.
 - Accepts standard hex input — the most common format in design tools and CSS.
+
+---
+
+### 5. oklch Palette Generator (Full Brand Derivation)
+
+A JavaScript function that takes a single brand color (hex) and generates a complete design system palette: primary ramp, complementary color, analogous color, and harmonized neutral gray.
+
+```javascript
+/**
+ * Generate a complete design system color palette from a single hex color.
+ * Uses oklch for perceptually uniform shade ramps.
+ */
+
+// --- Step 1: Hex to oklch conversion ---
+// (Simplified via sRGB → linear sRGB → oklab → oklch pipeline)
+
+function hexToRgb(hex) {
+  const h = hex.replace("#", "");
+  return [
+    parseInt(h.slice(0, 2), 16) / 255,
+    parseInt(h.slice(2, 4), 16) / 255,
+    parseInt(h.slice(4, 6), 16) / 255,
+  ];
+}
+
+function linearize(c) {
+  return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+}
+
+function rgbToOklab(r, g, b) {
+  const lr = linearize(r), lg = linearize(g), lb = linearize(b);
+  const l = Math.cbrt(0.4122214708 * lr + 0.5363325363 * lg + 0.0514459929 * lb);
+  const m = Math.cbrt(0.2119034982 * lr + 0.6806995451 * lg + 0.1073969566 * lb);
+  const s = Math.cbrt(0.0883024619 * lr + 0.2817188376 * lg + 0.6299787005 * lb);
+  return [
+    0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s,
+    1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s,
+    0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s,
+  ];
+}
+
+function oklabToOklch([L, a, b]) {
+  const C = Math.sqrt(a * a + b * b);
+  let H = (Math.atan2(b, a) * 180) / Math.PI;
+  if (H < 0) H += 360;
+  return { L, C, H };
+}
+
+function hexToOklch(hex) {
+  const [r, g, b] = hexToRgb(hex);
+  const lab = rgbToOklab(r, g, b);
+  return oklabToOklch(lab);
+}
+
+// --- Step 2: Generate shade ramp ---
+
+function generateRamp(baseC, baseH) {
+  const steps = {
+    50: 0.97, 100: 0.93, 200: 0.86, 300: 0.76, 400: 0.66,
+    500: 0.55, 600: 0.48, 700: 0.42, 800: 0.35, 900: 0.28, 950: 0.20,
+  };
+
+  const ramp = {};
+  for (const [step, L] of Object.entries(steps)) {
+    // Taper chroma at extremes to avoid pastels and mud
+    let C = baseC;
+    if (L > 0.9) C *= 0.15;
+    else if (L > 0.8) C *= 0.45;
+    else if (L > 0.6) C *= 0.85;
+    else if (L < 0.25) C *= 0.5;
+    else if (L < 0.4) C *= 0.85;
+
+    ramp[step] = `oklch(${L.toFixed(2)} ${C.toFixed(3)} ${baseH.toFixed(0)})`;
+  }
+  return ramp;
+}
+
+// --- Step 3: Derive full palette ---
+
+function generatePalette(brandHex) {
+  const { C, H } = hexToOklch(brandHex);
+
+  return {
+    primary:       generateRamp(C, H),
+    complementary: generateRamp(C * 0.85, (H + 180) % 360),
+    analogous1:    generateRamp(C * 0.75, (H + 30) % 360),
+    analogous2:    generateRamp(C * 0.75, (H - 30 + 360) % 360),
+    neutral:       generateRamp(0.008, H), // near-zero chroma, brand hue
+  };
+}
+
+// --- Usage ---
+const palette = generatePalette("#6366f1"); // indigo brand color
+
+console.log("Primary:", palette.primary);
+console.log("Neutral:", palette.neutral);
+
+// Output CSS custom properties
+function paletteToCSS(palette) {
+  let css = ":root {\n";
+  for (const [name, ramp] of Object.entries(palette)) {
+    for (const [step, value] of Object.entries(ramp)) {
+      css += `  --color-${name}-${step}: ${value};\n`;
+    }
+    css += "\n";
+  }
+  css += "}";
+  return css;
+}
+
+console.log(paletteToCSS(palette));
+```
+
+**Key decisions:**
+- Full hex → oklch conversion pipeline (no external dependencies).
+- Shade ramp uses perceptually uniform lightness steps with chroma tapering at extremes.
+- Derives complementary (+180 degrees), analogous (+/-30 degrees) colors from the brand hue.
+- Neutral palette uses the brand hue at near-zero chroma, producing warm/cool grays that harmonize with the brand.
+- Outputs CSS custom properties ready for production use.
 
 ---
 

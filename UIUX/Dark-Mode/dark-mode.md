@@ -110,6 +110,80 @@ Dark mode is not "set it and forget it." Every component must be verified in bot
 - **State coverage:** Check hover, focus, active, disabled, error, and success states in both themes. A focus ring visible on white may be invisible on dark gray.
 - **Third-party embeds:** Maps, videos, iframes, and widgets may not respect your theme. Test and apply workarounds where possible.
 
+### 11. AMOLED / True Black Theme
+
+Some users prefer a "true black" theme (`#000000` background) for OLED and AMOLED screens, where black pixels are physically turned off, saving battery and producing infinite contrast.
+
+**Tradeoffs:**
+- **Pro:** Battery savings on OLED devices. Perceived "deeper" dark mode.
+- **Con:** Halation — white text on pure black creates a glowing/smearing effect for users with astigmatism (~30-50% of the population). Readability decreases with pure black.
+- **Con:** Adjacent UI elements lose definition. Without even subtle contrast between background and card surfaces, the layout feels flat and disorienting.
+
+**Recommendation:** Offer true black as an *option*, not the default dark theme. The default dark theme should use near-black (e.g., `#0a0a0a`, `oklch(0.13 0.01 260)`) which avoids halation while still looking dark. The AMOLED option uses `#000000` for the body background and very dark grays for surfaces.
+
+### 12. High Contrast Mode and `forced-colors`
+
+Some users run their OS in a high contrast mode (Windows High Contrast Mode, macOS "Increase Contrast"). In this mode, the operating system overrides your CSS colors with a user-defined palette.
+
+The `forced-colors` media query detects this:
+
+```css
+@media (forced-colors: active) {
+  /* The OS is overriding colors. Custom colors are ignored.
+     Use system color keywords instead. */
+  .button {
+    border: 2px solid ButtonText;
+  }
+
+  .focus-ring {
+    outline: 2px solid Highlight;
+  }
+
+  /* Ensure custom icons/graphics remain visible */
+  .icon {
+    forced-color-adjust: auto; /* default — OS overrides */
+  }
+
+  /* Opt out for decorative elements that break in forced-colors */
+  .decorative-gradient {
+    forced-color-adjust: none;
+  }
+}
+```
+
+System color keywords available in `forced-colors`: `Canvas`, `CanvasText`, `LinkText`, `VisitedText`, `ActiveText`, `ButtonFace`, `ButtonText`, `Field`, `FieldText`, `Highlight`, `HighlightText`, `GrayText`, `Mark`, `MarkText`.
+
+**Key rule:** Do not try to fight forced-colors mode. Instead, ensure your layout, borders, and focus indicators work correctly with system colors. Test in Windows High Contrast Mode (or Firefox's built-in simulator) periodically.
+
+### 13. CSS `color-scheme` Property
+
+The CSS `color-scheme` property tells the browser which color schemes your page supports. This affects native browser UI (scrollbars, form controls, button styles) before your CSS even loads.
+
+```css
+/* Declare that the page supports both schemes */
+:root {
+  color-scheme: light dark;
+}
+
+/* In dark mode, force the dark scheme for native controls */
+[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+/* In light mode, force the light scheme */
+[data-theme="light"] {
+  color-scheme: light;
+}
+```
+
+**What it affects:**
+- Default background color and text color of the page (before CSS loads).
+- Scrollbar styling (dark scrollbars in dark mode).
+- Form controls (`<input>`, `<select>`, `<textarea>`) adopt the system's dark appearance.
+- `<dialog>` and `<details>` native styling.
+
+**Always set `color-scheme` when implementing dark mode.** Without it, native controls look jarring — light scrollbars on a dark page, white input backgrounds in a dark form.
+
 ---
 
 ## LLM Instructions
@@ -691,6 +765,144 @@ function ThemeAwareImage({ lightSrc, darkSrc, alt, ...props }) {
 //   height={450}
 // />
 ```
+
+### 5. Tailwind CSS Dark Mode Setup (`darkMode: 'class'`)
+
+```js
+// tailwind.config.js
+/** @type {import('tailwindcss').Config} */
+export default {
+  // Use class-based dark mode for manual toggle support
+  // This works with data-theme attribute via a custom selector
+  darkMode: ["class", '[data-theme="dark"]'],
+
+  theme: {
+    extend: {
+      colors: {
+        surface: {
+          DEFAULT: "var(--color-surface)",
+          alt: "var(--color-surface-alt)",
+        },
+      },
+    },
+  },
+};
+```
+
+```html
+<!-- Usage in Tailwind — prefix dark: utilities -->
+<div class="bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100">
+  <h1 class="text-neutral-950 dark:text-neutral-50">Dashboard</h1>
+  <p class="text-neutral-600 dark:text-neutral-400">Welcome back.</p>
+
+  <button class="bg-blue-600 dark:bg-blue-500 text-white hover:bg-blue-700 dark:hover:bg-blue-400">
+    Create project
+  </button>
+
+  <div class="border border-neutral-200 dark:border-neutral-700 rounded-lg p-4">
+    <p class="text-neutral-700 dark:text-neutral-300">Card content</p>
+  </div>
+</div>
+```
+
+**Key decisions:**
+- `darkMode: ["class", '[data-theme="dark"]']` activates dark utilities when `data-theme="dark"` is set on `<html>` — compatible with the three-way toggle pattern.
+- Components use `dark:` prefix for every color-sensitive property.
+- Token-based approach: semantic CSS custom properties (`var(--color-surface)`) are preferred for large projects; `dark:` prefixes work well for smaller projects or rapid prototyping.
+
+### 6. next-themes Integration (Next.js)
+
+```tsx
+// app/providers.tsx
+"use client";
+
+import { ThemeProvider } from "next-themes";
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <ThemeProvider
+      attribute="data-theme"       // Sets data-theme on <html>
+      defaultTheme="system"        // Respect OS preference by default
+      enableSystem                 // Listen to prefers-color-scheme
+      disableTransitionOnChange    // Prevent flash during theme switch
+      storageKey="theme"           // localStorage key
+    >
+      {children}
+    </ThemeProvider>
+  );
+}
+```
+
+```tsx
+// app/layout.tsx
+import { Providers } from "./providers";
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* FOUC prevention — next-themes injects a script automatically,
+            but adding color-scheme helps native controls */}
+        <meta name="color-scheme" content="light dark" />
+      </head>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  );
+}
+```
+
+```tsx
+// components/theme-toggle.tsx
+"use client";
+
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
+import { Sun, Moon, Monitor } from "lucide-react";
+
+export function ThemeToggle() {
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // Avoid hydration mismatch — only render after mount
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return <div className="w-9 h-9" />; // placeholder
+
+  const options = [
+    { value: "light", icon: Sun, label: "Light" },
+    { value: "dark", icon: Moon, label: "Dark" },
+    { value: "system", icon: Monitor, label: "System" },
+  ] as const;
+
+  return (
+    <div className="flex gap-1 rounded-lg border border-neutral-200 dark:border-neutral-700 p-1">
+      {options.map(({ value, icon: Icon, label }) => (
+        <button
+          key={value}
+          onClick={() => setTheme(value)}
+          className={`p-2 rounded-md transition-colors ${
+            theme === value
+              ? "bg-neutral-200 dark:bg-neutral-700 text-neutral-900 dark:text-neutral-100"
+              : "text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"
+          }`}
+          aria-label={`Switch to ${label} theme`}
+          aria-pressed={theme === value}
+        >
+          <Icon size={16} />
+        </button>
+      ))}
+    </div>
+  );
+}
+```
+
+**Key decisions:**
+- `next-themes` handles FOUC prevention, localStorage, system preference detection, and SSR automatically.
+- `attribute="data-theme"` sets `data-theme` on `<html>` for CSS custom property switching.
+- `disableTransitionOnChange` prevents a brief transition flash when switching themes.
+- `suppressHydrationWarning` on `<html>` is required because the theme script may set attributes before React hydrates.
+- `mounted` guard prevents hydration mismatch — the toggle renders a placeholder until the client has mounted and can read the actual theme.
 
 ---
 

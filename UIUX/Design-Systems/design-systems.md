@@ -108,6 +108,37 @@ Not every team should build a design system from scratch. The decision depends o
 
 **Rule of thumb:** Start with an existing system. Fork or eject only when you hit real limitations, not hypothetical ones.
 
+### 8. Governance and Versioning
+
+A design system serves multiple teams and products. Without governance, it becomes a dumping ground of one-off components and conflicting patterns.
+
+**Semantic versioning (semver):** Version your design system as a package. Follow `MAJOR.MINOR.PATCH`:
+- **PATCH (1.0.1):** Bug fix, visual tweak that does not change API or behavior.
+- **MINOR (1.1.0):** New component, new variant, new token. Non-breaking — consumers can upgrade without changes.
+- **MAJOR (2.0.0):** Removed component, renamed prop, changed token value that affects consumers. Breaking — consumers must update their code.
+
+**Changelog:** Maintain a `CHANGELOG.md` with every release. For each version, list: what changed, why it changed, and what consumers need to do (for breaking changes). Automate this with conventional commits and tools like `changesets` or `release-please`.
+
+**Breaking change strategy:**
+1. **Deprecate first.** Add a deprecation warning in MINOR (console.warn, strikethrough in docs). Give consumers a release cycle to migrate.
+2. **Remove in the next MAJOR.** Only after deprecation has been communicated.
+3. **Provide codemods** when possible — automated scripts that refactor consumer code from old API to new API.
+
+**Contribution model:** Define who can add, modify, or remove components. A typical model: anyone can propose via a GitHub issue or PR. A small core team reviews for consistency, accessibility, and API quality. Design review before merge.
+
+### 9. Multi-Framework Support
+
+Large organizations often have teams using React, Vue, Angular, or plain HTML. A design system should provide consistent tokens and, ideally, consistent components across frameworks.
+
+**Shared token layer:** Design tokens (colors, spacing, typography, shadows, radii) should be framework-agnostic. Define them as:
+- CSS custom properties (works everywhere).
+- JSON token files (consumed by build tools to generate CSS, Tailwind config, iOS constants, Android resources).
+- Use [Style Dictionary](https://amzn.github.io/style-dictionary/) or [Cobalt UI](https://cobalt-ui.pages.dev/) to generate multi-platform outputs from a single token source.
+
+**Web Components:** For truly framework-agnostic components, build with Web Components (using Lit, Stencil, or native `customElements`). These work in React, Vue, Angular, and plain HTML. The trade-off: DX is less polished than native framework components, and React's synthetic event system can be awkward with custom elements.
+
+**Practical approach:** Most teams are better served by building tokens as CSS custom properties (shared) and components in their primary framework (e.g., React). If a secondary framework needs the same components, start with the shared tokens and rebuild components natively in that framework.
+
 ---
 
 ## LLM Instructions
@@ -734,6 +765,173 @@ export const Disabled: Story = {
   },
 };
 ```
+
+### Example 5: Input / Form Field Component (React + Tailwind)
+
+The other critical atom component alongside Button — a reusable form field with label, error, and description support.
+
+```tsx
+import * as React from "react";
+import { cn } from "@/lib/utils";
+
+export interface InputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
+  label: string;
+  error?: string;
+  description?: string;
+}
+
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  ({ label, error, description, className, id, ...props }, ref) => {
+    const inputId = id || React.useId();
+    const errorId = error ? `${inputId}-error` : undefined;
+    const descId = description ? `${inputId}-desc` : undefined;
+
+    return (
+      <div className="flex flex-col gap-1.5">
+        <label
+          htmlFor={inputId}
+          className="text-sm font-medium text-neutral-800 dark:text-neutral-200"
+        >
+          {label}
+          {props.required && (
+            <span className="text-red-500 ml-0.5" aria-hidden="true">*</span>
+          )}
+        </label>
+
+        {description && (
+          <p id={descId} className="text-xs text-neutral-500">
+            {description}
+          </p>
+        )}
+
+        <input
+          ref={ref}
+          id={inputId}
+          className={cn(
+            "w-full rounded-md border px-3 py-2 text-base",
+            "bg-white dark:bg-neutral-900",
+            "border-neutral-300 dark:border-neutral-700",
+            "text-neutral-900 dark:text-neutral-100",
+            "placeholder:text-neutral-400",
+            "transition-colors duration-150",
+            "focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-400",
+            "disabled:cursor-not-allowed disabled:opacity-50",
+            error && "border-red-500 focus:ring-red-400 focus:border-red-500",
+            className
+          )}
+          aria-invalid={error ? "true" : undefined}
+          aria-describedby={
+            [errorId, descId].filter(Boolean).join(" ") || undefined
+          }
+          {...props}
+        />
+
+        {error && (
+          <p id={errorId} className="text-sm text-red-600 dark:text-red-400" role="alert">
+            {error}
+          </p>
+        )}
+      </div>
+    );
+  }
+);
+Input.displayName = "Input";
+
+export { Input };
+```
+
+**Key decisions:**
+- Label is required (no unlabeled inputs in the design system).
+- Error state uses `aria-invalid` and `aria-describedby` linking to the error message `id`.
+- Description text uses `aria-describedby` so screen readers announce it when the input is focused.
+- `React.useId()` generates stable, unique IDs for SSR safety.
+- Focus ring matches the primary brand color. Error state overrides to red.
+- Dark mode variants included via Tailwind's `dark:` prefix.
+
+---
+
+### Example 6: Token Generation from a Brand Color (oklch Shade Ramp)
+
+A JavaScript function that takes a single oklch base color and generates a full 11-shade ramp.
+
+```javascript
+/**
+ * Generate an oklch shade ramp from a single base color.
+ *
+ * @param {number} baseL - Base lightness (0 to 1), e.g., 0.55
+ * @param {number} baseC - Base chroma (0 to 0.4), e.g., 0.20
+ * @param {number} baseH - Base hue (0 to 360), e.g., 250
+ * @returns {Record<string, string>} Shade map { "50": "oklch(...)", ..., "950": "oklch(...)" }
+ */
+function generateOklchRamp(baseL, baseC, baseH) {
+  // Target lightness values for each shade step
+  // 50 is very light (background tints), 950 is very dark
+  const lightnessMap = {
+    50:  0.97,
+    100: 0.93,
+    200: 0.86,
+    300: 0.76,
+    400: 0.66,
+    500: 0.55,
+    600: 0.48,
+    700: 0.42,
+    800: 0.35,
+    900: 0.28,
+    950: 0.20,
+  };
+
+  // Chroma curve: reduce chroma at extremes (very light and very dark)
+  // to avoid oversaturated pastels and muddy darks
+  function chromaForLightness(L) {
+    if (L > 0.9) return baseC * 0.15;       // very light: minimal chroma
+    if (L > 0.8) return baseC * 0.45;       // light: moderate chroma
+    if (L > 0.6) return baseC * 0.85;       // medium-light: near full
+    if (L > 0.4) return baseC;               // core range: full chroma
+    if (L > 0.25) return baseC * 0.85;      // dark: slightly reduced
+    return baseC * 0.5;                       // very dark: reduced
+  }
+
+  const ramp = {};
+  for (const [step, L] of Object.entries(lightnessMap)) {
+    const C = chromaForLightness(L);
+    ramp[step] = `oklch(${L.toFixed(2)} ${C.toFixed(3)} ${baseH})`;
+  }
+
+  return ramp;
+}
+
+// Usage: Generate a full indigo palette from one color
+const indigoPalette = generateOklchRamp(0.55, 0.22, 285);
+// {
+//   "50":  "oklch(0.97 0.033 285)",
+//   "100": "oklch(0.93 0.099 285)",
+//   "200": "oklch(0.86 0.187 285)",
+//   "300": "oklch(0.76 0.187 285)",
+//   "400": "oklch(0.66 0.187 285)",
+//   "500": "oklch(0.55 0.220 285)",
+//   "600": "oklch(0.48 0.220 285)",
+//   "700": "oklch(0.42 0.220 285)",
+//   "800": "oklch(0.35 0.187 285)",
+//   "900": "oklch(0.28 0.187 285)",
+//   "950": "oklch(0.20 0.110 285)",
+// }
+
+// Generate CSS custom properties from the ramp
+function rampToCSS(name, ramp) {
+  return Object.entries(ramp)
+    .map(([step, value]) => `  --${name}-${step}: ${value};`)
+    .join("\n");
+}
+
+console.log(`:root {\n${rampToCSS("primary", indigoPalette)}\n}`);
+```
+
+**Key decisions:**
+- Lightness values are hand-tuned to match common design token conventions (50 = very light background, 500 = default, 950 = near-black).
+- Chroma is reduced at the extremes to produce natural-looking pastels (high lightness) and deep shades (low lightness) without muddiness or neon artifacts.
+- Hue is kept constant across all shades for a visually cohesive ramp.
+- The function outputs CSS-ready `oklch()` strings that can be pasted directly into a stylesheet or design token file.
 
 ---
 

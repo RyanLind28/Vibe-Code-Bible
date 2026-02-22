@@ -108,6 +108,53 @@ Reveal complexity gradually. Start with the simplest, most common options. Provi
 
 **Optimistic UI.** For low-risk actions (starring an item, toggling a setting), update the UI immediately and reconcile with the server in the background. Roll back gracefully on failure with a brief toast.
 
+### 10. Onboarding Flows
+
+Onboarding is the user's first impression of your product. A good onboarding flow reduces time-to-value — the time between signup and the user's first "aha" moment.
+
+**Patterns:**
+
+- **Checklist onboarding:** A visible progress list of setup tasks (connect account, invite team, create first project). Users see what is done and what remains. Best for products with multiple setup steps.
+- **Guided tour:** Tooltip-driven walkthrough that highlights key UI elements in sequence. Best for complex UIs where the user might not know where to look. Keep it to 3-5 steps maximum.
+- **Empty state onboarding:** The empty state *is* the onboarding. Each empty page teaches the user what goes there and provides a CTA to create the first item. Best for simple products.
+- **Progressive onboarding:** Do not front-load everything. Teach features contextually as the user encounters them for the first time (first time opening settings, first time inviting a teammate).
+
+**Key principles:**
+1. **Let users skip.** Never lock users in an onboarding flow. Provide a "Skip for now" or "I'll do this later" option on every step.
+2. **Show progress.** A visible checklist or progress bar motivates completion.
+3. **Celebrate completion.** A small celebration (confetti, checkmark animation, encouraging message) when the user finishes onboarding reinforces accomplishment.
+4. **Persist state.** If the user leaves mid-onboarding, resume from where they left off.
+
+### 11. Settings and Preferences Pages
+
+Settings pages are where the user configures the product. They are deceptively complex — a poorly organized settings page makes users feel the product is complicated.
+
+**Layout patterns:**
+
+- **Grouped sections with a sidebar:** For apps with many settings (10+). A left sidebar lists categories (Profile, Notifications, Billing, Integrations), and the main area shows the selected group. Each group is a card or section with a clear heading.
+- **Single scrolling page:** For apps with few settings (under 10). All settings on one page, grouped by category with section headings and adequate spacing.
+- **Tabbed groups:** Settings organized into tabs (General, Advanced, Appearance). Good for moderate complexity.
+
+**Key principles:**
+1. **Group related settings.** Never present a flat list of 30 toggles. Categorize: Account, Notifications, Appearance, Privacy, Integrations.
+2. **Use the right control for the data type.** Toggles for on/off. Radio groups for mutually exclusive options. Dropdowns for long lists. Text inputs for free-form values.
+3. **Auto-save or explicit save?** Auto-save is better UX for most settings (with an inline "Saved" confirmation). Use explicit save (a button) only when changes are complex or dangerous (billing, security).
+4. **Show current state clearly.** If notifications are off, the user should see that immediately — not have to open a sub-page.
+5. **Dangerous settings need protection.** Account deletion, data export, and security changes should require confirmation and possibly re-authentication.
+
+### 12. Drag-and-Drop Patterns
+
+Drag-and-drop enables spatial rearrangement: reordering lists, organizing kanban boards, sorting items into categories. It is powerful but has significant accessibility concerns.
+
+**Implementation guidelines:**
+
+1. **Use a library.** Do not build drag-and-drop from scratch. Use `@dnd-kit/core` (React) or `SortableJS` for production-quality interactions including collision detection, drop animations, and accessibility.
+2. **Always provide keyboard alternatives.** Every drag-and-drop interaction must be achievable via keyboard: select an item (Space/Enter), move it (Arrow keys), drop it (Space/Enter), cancel (Escape).
+3. **Provide visible affordances.** A drag handle icon (six dots / grip icon) signals that an item is draggable. Do not rely on the user discovering that the entire row is draggable.
+4. **Show drop targets.** During a drag, highlight valid drop zones with a visual indicator (colored border, background change, insertion line).
+5. **Announce state changes.** Use `aria-live` regions to announce to screen readers: "Item picked up. Position 2 of 5." "Item moved. Now position 3 of 5." "Item dropped. Final position 3 of 5."
+6. **Handle edge cases.** What happens when dragging to an empty list? When the list scrolls during drag? When the user drags outside the valid area?
+
 ---
 
 ## LLM Instructions
@@ -154,6 +201,24 @@ When an AI assistant is asked to design or implement UI/UX, follow these directi
 2. **Error:** Display a user-friendly message, the cause if determinable, and a recovery action. Log the technical error to the console or monitoring service.
 3. **Empty:** Design dedicated empty states with an illustration, a headline, a description, and a CTA. Never show a blank table or list.
 4. For asynchronous data, implement the state machine: `idle -> loading -> success | error`. Use discriminated unions or state enums, not boolean flags (`isLoading && !isError` is fragile).
+
+### Designing Onboarding Flows
+
+1. **Ask what the "aha" moment is.** Every onboarding flow should drive toward a specific first success: creating a project, sending a message, seeing data in a dashboard. Design the flow backward from that moment.
+2. **Use the checklist pattern by default.** A visible, persistent checklist (sidebar or banner) with 3-5 setup tasks. Mark completed tasks with a checkmark. Show a progress percentage or fraction ("3 of 5 complete").
+3. **Every step must be skippable.** Add "Skip" or "I'll do this later" to every onboarding step. Never trap the user.
+4. **Empty states are onboarding.** When the user navigates to a section with no data, the empty state should teach what goes there and provide a CTA: "No projects yet. Create your first one."
+5. **Persist onboarding state.** Store the checklist state (completed steps, dismissed state) in the database, not local state. If the user logs out and back in, they should see their progress.
+6. **Celebrate completion.** Show a brief success animation or message when all onboarding tasks are complete. Then dismiss the checklist permanently.
+
+### Implementing Accessible Drag-and-Drop
+
+1. **Use `@dnd-kit/core` or `@dnd-kit/sortable` for React projects.** These libraries provide collision detection, keyboard sensor support, screen reader announcements, and drop animations out of the box.
+2. **Always add a keyboard sensor.** Enable `KeyboardSensor` alongside `PointerSensor` and `TouchSensor`. Configure activation constraints to prevent accidental drags.
+3. **Add `aria-roledescription="sortable"` to sortable items** and use `aria-describedby` to link usage instructions: "Press Space to pick up. Use Arrow keys to move. Press Space again to drop."
+4. **Use `DragOverlay` for the dragged item's visual representation** — do not move the original DOM element, which disrupts screen reader context.
+5. **Announce every state change.** Provide live region announcements: "Picked up [item name]. Current position: 2 of 5." "Moved to position 3 of 5." "Dropped at position 3 of 5." "Reorder cancelled."
+6. **For non-sortable drag-and-drop** (e.g., kanban columns, file upload zones), provide a button-based alternative: a "Move to..." menu that lists valid destinations.
 
 ### Designing Notification Systems
 
@@ -956,6 +1021,385 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: string)
 - Progress bar visually counts down the auto-dismiss timer.
 - `aria-live="polite"` announces toasts to screen readers.
 - Limits visible toasts to 5 to avoid overwhelming the screen.
+
+---
+
+### 5. Onboarding Checklist Component (React)
+
+```tsx
+import { useState } from "react";
+import { CheckCircle2, Circle, ChevronRight, X } from "lucide-react";
+
+type OnboardingStep = {
+  id: string;
+  title: string;
+  description: string;
+  completed: boolean;
+  action: () => void;
+  actionLabel: string;
+};
+
+type OnboardingChecklistProps = {
+  steps: OnboardingStep[];
+  onDismiss: () => void;
+};
+
+export function OnboardingChecklist({ steps, onDismiss }: OnboardingChecklistProps) {
+  const [expanded, setExpanded] = useState(true);
+  const completedCount = steps.filter((s) => s.completed).length;
+  const progress = (completedCount / steps.length) * 100;
+  const allComplete = completedCount === steps.length;
+
+  if (allComplete) {
+    return (
+      <div className="onboarding-complete" role="status">
+        <CheckCircle2 className="onboarding-complete-icon" aria-hidden="true" />
+        <p className="onboarding-complete-title">You're all set!</p>
+        <p className="onboarding-complete-desc">
+          You've completed setup. You can always revisit settings later.
+        </p>
+        <button className="onboarding-dismiss-btn" onClick={onDismiss}>
+          Dismiss
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="onboarding-checklist" role="region" aria-label="Setup checklist">
+      {/* Header */}
+      <div className="onboarding-header">
+        <div>
+          <h3 className="onboarding-title">Get started</h3>
+          <p className="onboarding-progress-text">
+            {completedCount} of {steps.length} complete
+          </p>
+        </div>
+        <button
+          className="onboarding-toggle"
+          onClick={() => setExpanded(!expanded)}
+          aria-expanded={expanded}
+          aria-label={expanded ? "Collapse checklist" : "Expand checklist"}
+        >
+          {expanded ? <X size={16} /> : <ChevronRight size={16} />}
+        </button>
+      </div>
+
+      {/* Progress bar */}
+      <div
+        className="onboarding-progress-track"
+        role="progressbar"
+        aria-valuenow={completedCount}
+        aria-valuemin={0}
+        aria-valuemax={steps.length}
+      >
+        <div
+          className="onboarding-progress-fill"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+
+      {/* Steps */}
+      {expanded && (
+        <ul className="onboarding-steps">
+          {steps.map((step) => (
+            <li key={step.id} className="onboarding-step">
+              <span className="onboarding-step-icon" aria-hidden="true">
+                {step.completed ? (
+                  <CheckCircle2 size={20} className="step-done" />
+                ) : (
+                  <Circle size={20} className="step-pending" />
+                )}
+              </span>
+              <div className="onboarding-step-content">
+                <p className={`onboarding-step-title ${step.completed ? "completed" : ""}`}>
+                  {step.title}
+                </p>
+                {!step.completed && (
+                  <>
+                    <p className="onboarding-step-desc">{step.description}</p>
+                    <button
+                      className="onboarding-step-action"
+                      onClick={step.action}
+                    >
+                      {step.actionLabel}
+                      <ChevronRight size={14} aria-hidden="true" />
+                    </button>
+                  </>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+// Usage:
+// <OnboardingChecklist
+//   steps={[
+//     {
+//       id: "profile",
+//       title: "Complete your profile",
+//       description: "Add your name and avatar so your team can recognize you.",
+//       completed: true,
+//       action: () => navigate("/settings/profile"),
+//       actionLabel: "Edit profile",
+//     },
+//     {
+//       id: "invite",
+//       title: "Invite your team",
+//       description: "Collaboration works best with others. Invite at least one teammate.",
+//       completed: false,
+//       action: () => navigate("/settings/team"),
+//       actionLabel: "Invite teammates",
+//     },
+//     {
+//       id: "project",
+//       title: "Create your first project",
+//       description: "Start organizing your work with a new project.",
+//       completed: false,
+//       action: () => openNewProjectModal(),
+//       actionLabel: "New project",
+//     },
+//   ]}
+//   onDismiss={() => markOnboardingDismissed()}
+// />
+```
+
+**Why this works:**
+- Visible progress bar and count motivate completion.
+- Completed steps collapse to just a title with a checkmark, keeping the list scannable.
+- Incomplete steps show a description and a clear CTA button.
+- The checklist is collapsible (users can minimize it) and dismissable (after completion or manually).
+- `role="progressbar"` and `aria-expanded` provide accessibility.
+- When all steps are complete, a success state replaces the checklist.
+
+---
+
+### 6. Settings Page Layout (React + CSS)
+
+```tsx
+import { useState } from "react";
+import { User, Bell, Palette, Shield, Plug } from "lucide-react";
+
+const SECTIONS = [
+  { id: "profile", label: "Profile", icon: User },
+  { id: "notifications", label: "Notifications", icon: Bell },
+  { id: "appearance", label: "Appearance", icon: Palette },
+  { id: "security", label: "Security", icon: Shield },
+  { id: "integrations", label: "Integrations", icon: Plug },
+] as const;
+
+export function SettingsPage() {
+  const [activeSection, setActiveSection] = useState<string>("profile");
+
+  return (
+    <div className="settings-layout">
+      {/* Sidebar — visible on desktop, tabs on mobile */}
+      <nav className="settings-nav" aria-label="Settings sections">
+        <ul className="settings-nav-list">
+          {SECTIONS.map(({ id, label, icon: Icon }) => (
+            <li key={id}>
+              <button
+                className={`settings-nav-item ${activeSection === id ? "active" : ""}`}
+                onClick={() => setActiveSection(id)}
+                aria-current={activeSection === id ? "page" : undefined}
+              >
+                <Icon size={18} aria-hidden="true" />
+                <span>{label}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      {/* Content */}
+      <main className="settings-content">
+        {activeSection === "profile" && <ProfileSection />}
+        {activeSection === "notifications" && <NotificationSection />}
+        {/* ...other sections */}
+      </main>
+    </div>
+  );
+}
+
+function ProfileSection() {
+  const [saved, setSaved] = useState(false);
+
+  function handleSave() {
+    // API call here
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
+  }
+
+  return (
+    <section aria-labelledby="profile-heading">
+      <h2 id="profile-heading" className="settings-heading">Profile</h2>
+      <p className="settings-description">
+        Your profile information is visible to your team members.
+      </p>
+
+      <div className="settings-card">
+        <div className="settings-field">
+          <label htmlFor="display-name" className="settings-label">
+            Display name
+          </label>
+          <input
+            id="display-name"
+            type="text"
+            className="settings-input"
+            defaultValue="Jane Smith"
+          />
+        </div>
+
+        <div className="settings-field">
+          <label htmlFor="email" className="settings-label">Email</label>
+          <input
+            id="email"
+            type="email"
+            className="settings-input"
+            defaultValue="jane@example.com"
+          />
+        </div>
+
+        <div className="settings-actions">
+          <button className="btn-primary" onClick={handleSave}>
+            {saved ? "Saved!" : "Save changes"}
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
+```
+
+```css
+/* Settings page layout */
+.settings-layout {
+  display: flex;
+  flex-direction: column;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  gap: 2rem;
+}
+
+/* Mobile: horizontal scrollable tabs */
+.settings-nav-list {
+  display: flex;
+  gap: 0.25rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.settings-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.settings-nav-item:hover {
+  background: var(--color-bg-muted);
+}
+
+.settings-nav-item.active {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+/* Desktop: vertical sidebar */
+@media (min-width: 768px) {
+  .settings-layout {
+    flex-direction: row;
+    gap: 3rem;
+  }
+
+  .settings-nav {
+    flex-shrink: 0;
+    width: 200px;
+    position: sticky;
+    top: 2rem;
+    align-self: flex-start;
+  }
+
+  .settings-nav-list {
+    flex-direction: column;
+    overflow-x: visible;
+  }
+}
+
+.settings-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.settings-heading {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.settings-description {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  margin-bottom: 1.5rem;
+}
+
+.settings-card {
+  padding: 1.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md, 12px);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.settings-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.settings-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.settings-input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md, 12px);
+  font-size: 1rem;
+}
+
+.settings-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 0.5rem;
+}
+```
+
+**Why this works:**
+- Mobile: horizontal scrollable tabs keep all sections accessible in the thumb zone.
+- Desktop: vertical sidebar with sticky positioning.
+- Section headings with descriptions give context for each settings group.
+- Grouped into cards for visual separation.
+- Inline "Saved!" feedback replaces the button text temporarily — no toast needed for simple saves.
 
 ---
 

@@ -6,16 +6,17 @@
 
 ```
 UIUX/
-├── Design-Systems/          → Component libraries, tokens, theming
-├── Accessibility/           → WCAG compliance, ARIA, screen readers
-├── Responsive-Design/       → Breakpoints, fluid layouts, container queries
-├── Typography-Color/        → Type scales, color theory, contrast ratios
-├── UX-Patterns/             → Forms, navigation, modals, search, onboarding
-├── Animation-Motion/        → Transitions, micro-interactions, reduced motion
-├── Dark-Mode/               → Theme switching, color tokens, system preference
-└── Mobile-First/            → Touch targets, gestures, mobile performance
+├── Brand-Identity/          → Brand briefs, visual identity, voice & tone, consistency
+├── Design-Systems/          → Component libraries, tokens, theming, governance
+├── Accessibility/           → WCAG compliance, ARIA, screen readers, cognitive a11y
+├── Responsive-Design/       → Breakpoints, fluid layouts, container queries, subgrid
+├── Typography-Color/        → Type scales, color theory, contrast ratios, gradients
+├── UX-Patterns/             → Forms, navigation, modals, search, onboarding, drag-and-drop
+├── Animation-Motion/        → Transitions, micro-interactions, scroll-driven animations
+├── Dark-Mode/               → Theme switching, color tokens, AMOLED, next-themes
+└── Mobile-First/            → Touch targets, gestures, offline-first, service workers
 ```
 
 ## Status
 
-Complete — all 8 guides are written and reviewed.
+Complete — all 9 guides are written and reviewed.

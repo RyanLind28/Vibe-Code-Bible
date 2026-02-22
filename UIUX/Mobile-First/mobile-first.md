@@ -162,6 +162,54 @@ Progressive Web Apps bridge the gap between web and native mobile experiences. F
 
 PWA is not all-or-nothing. Even implementing just a service worker for caching and a manifest for "Add to Home Screen" significantly improves the mobile experience.
 
+### 11. Offline-First Patterns
+
+Offline-first design assumes the network is unreliable and builds the experience around local-first data. The app works offline by default; the network is an enhancement.
+
+**Service worker caching strategies:**
+
+| Strategy | How it works | Best for |
+|----------|-------------|----------|
+| **Cache First** | Check cache first; fall back to network if miss. | Static assets (CSS, JS, fonts, images). Content that changes rarely. |
+| **Network First** | Try network first; fall back to cache if offline. | API responses, dynamic content. Shows freshest data when online, cached data when offline. |
+| **Stale While Revalidate** | Return cached version immediately, then fetch update in background. Next visit gets the updated version. | Content that should load instantly but also stay fresh (blog posts, product listings). |
+| **Network Only** | Always fetch from network. No caching. | Authentication, real-time data, analytics. |
+| **Cache Only** | Only return from cache. No network fallback. | Pre-cached app shell assets that never change for a given version. |
+
+**Practical offline-first guidelines:**
+1. **Cache the app shell.** HTML skeleton, CSS, JavaScript, and critical assets should be pre-cached during service worker installation. The app should render its chrome (navigation, header, footer) even with no network.
+2. **Cache recently viewed content.** When a user views a page, cache the API response. If they return offline, they see the last-known state.
+3. **Queue offline mutations.** If a user creates, edits, or deletes data while offline, store the mutation in IndexedDB. Replay it when the connection returns (background sync).
+4. **Show connection state.** Display a banner or indicator when the user is offline so they understand why some features may be limited.
+
+### 12. App Shell Architecture
+
+The app shell is the minimum HTML, CSS, and JavaScript required to render the application's chrome — the navigation, header, footer, and layout skeleton — without any dynamic content.
+
+**How it works:**
+1. The service worker pre-caches the app shell during installation.
+2. On subsequent visits (including offline), the app shell loads instantly from cache.
+3. Dynamic content (API data, user-specific info) is fetched separately and inserted into the shell.
+
+**Benefits:**
+- Instant loading on repeat visits — the shell renders from cache in milliseconds.
+- Reliable offline experience — the app chrome is always available.
+- Perceived performance improvement — users see the layout immediately while data loads.
+
+**App shell contents (pre-cached):**
+- `index.html` (or the root route HTML)
+- `main.css` (compiled stylesheet)
+- `main.js` (core JavaScript bundle)
+- Critical fonts (the primary body font, subsetted)
+- Logo and essential images
+- Offline fallback page
+
+**NOT part of the app shell:**
+- API responses
+- User-specific data
+- Secondary images
+- Non-critical JavaScript (lazy-loaded route chunks)
+
 ---
 
 ## LLM Instructions
@@ -944,6 +992,234 @@ function CardGrid({ items }) {
   );
 }
 ```
+
+### 5. Workbox Service Worker (Caching Strategies)
+
+A production-ready service worker using Workbox for multi-strategy caching.
+
+```javascript
+// service-worker.js — Workbox-based service worker
+
+import { precacheAndRoute } from "workbox-precaching";
+import { registerRoute } from "workbox-routing";
+import {
+  CacheFirst,
+  NetworkFirst,
+  StaleWhileRevalidate,
+} from "workbox-strategies";
+import { ExpirationPlugin } from "workbox-expiration";
+import { CacheableResponsePlugin } from "workbox-cacheable-response";
+
+// ---- 1. Pre-cache the app shell ----
+// __WB_MANIFEST is replaced by the build tool with the list of files to precache
+precacheAndRoute(self.__WB_MANIFEST);
+
+// ---- 2. Cache static assets (Cache First) ----
+// CSS, JS, fonts — rarely change within a version
+registerRoute(
+  ({ request }) =>
+    request.destination === "style" ||
+    request.destination === "script" ||
+    request.destination === "font",
+  new CacheFirst({
+    cacheName: "static-assets",
+    plugins: [
+      new CacheableResponsePlugin({ statuses: [0, 200] }),
+      new ExpirationPlugin({
+        maxEntries: 60,
+        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+      }),
+    ],
+  })
+);
+
+// ---- 3. Cache images (Cache First with limit) ----
+registerRoute(
+  ({ request }) => request.destination === "image",
+  new CacheFirst({
+    cacheName: "images",
+    plugins: [
+      new CacheableResponsePlugin({ statuses: [0, 200] }),
+      new ExpirationPlugin({
+        maxEntries: 100,
+        maxAgeSeconds: 30 * 24 * 60 * 60,
+      }),
+    ],
+  })
+);
+
+// ---- 4. Cache API responses (Network First) ----
+// Dynamic data — show fresh when online, cached when offline
+registerRoute(
+  ({ url }) => url.pathname.startsWith("/api/"),
+  new NetworkFirst({
+    cacheName: "api-responses",
+    networkTimeoutSeconds: 5, // Fall back to cache after 5s
+    plugins: [
+      new CacheableResponsePlugin({ statuses: [0, 200] }),
+      new ExpirationPlugin({
+        maxEntries: 50,
+        maxAgeSeconds: 24 * 60 * 60, // 1 day
+      }),
+    ],
+  })
+);
+
+// ---- 5. Cache page navigations (Stale While Revalidate) ----
+registerRoute(
+  ({ request }) => request.mode === "navigate",
+  new StaleWhileRevalidate({
+    cacheName: "pages",
+    plugins: [
+      new CacheableResponsePlugin({ statuses: [0, 200] }),
+    ],
+  })
+);
+
+// ---- 6. Offline fallback ----
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open("offline-fallback").then((cache) => {
+      return cache.add("/offline.html");
+    })
+  );
+});
+
+self.addEventListener("fetch", (event) => {
+  if (event.request.mode === "navigate") {
+    event.respondWith(
+      fetch(event.request).catch(() => {
+        return caches.match("/offline.html");
+      })
+    );
+  }
+});
+```
+
+**Key decisions:**
+- **Pre-cache the app shell** so the app loads instantly on repeat visits and offline.
+- **Cache First for static assets** — these are versioned by the build tool and change only on deploy.
+- **Network First for API responses** — always show fresh data when online, fall back to cached data when offline. 5-second timeout prevents slow networks from blocking the UI.
+- **Stale While Revalidate for pages** — instantly render the cached page, update in the background.
+- **Offline fallback page** catches navigation failures and shows a meaningful offline page instead of the browser's error.
+
+---
+
+### 6. Offline Indicator Component (React)
+
+A banner that shows when the user loses network connectivity and hides when it returns.
+
+```tsx
+import { useState, useEffect } from "react";
+import { WifiOff, Wifi } from "lucide-react";
+
+export function OfflineIndicator() {
+  const [isOnline, setIsOnline] = useState(true);
+  const [showReconnected, setShowReconnected] = useState(false);
+
+  useEffect(() => {
+    // Set initial state
+    setIsOnline(navigator.onLine);
+
+    function handleOnline() {
+      setIsOnline(true);
+      setShowReconnected(true);
+      // Auto-hide the "reconnected" banner after 3 seconds
+      setTimeout(() => setShowReconnected(false), 3000);
+    }
+
+    function handleOffline() {
+      setIsOnline(false);
+      setShowReconnected(false);
+    }
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
+
+  // Nothing to show when online and not recently reconnected
+  if (isOnline && !showReconnected) return null;
+
+  return (
+    <div
+      className={`offline-banner ${isOnline ? "reconnected" : "offline"}`}
+      role="status"
+      aria-live="assertive"
+    >
+      {isOnline ? (
+        <>
+          <Wifi size={16} aria-hidden="true" />
+          <span>You're back online.</span>
+        </>
+      ) : (
+        <>
+          <WifiOff size={16} aria-hidden="true" />
+          <span>You're offline. Some features may be limited.</span>
+        </>
+      )}
+    </div>
+  );
+}
+```
+
+```css
+.offline-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  z-index: 9999;
+  /* Account for safe area on mobile */
+  padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+  animation: slide-up 300ms ease-out;
+}
+
+.offline-banner.offline {
+  background-color: var(--color-warning-bg, #fef3c7);
+  color: var(--color-warning-text, #92400e);
+}
+
+.offline-banner.reconnected {
+  background-color: var(--color-success-bg, #dcfce7);
+  color: var(--color-success-text, #166534);
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .offline-banner {
+    animation: none;
+  }
+}
+```
+
+**Why this works:**
+- Uses the browser's `online`/`offline` events for real-time connection state.
+- Shows a persistent warning banner when offline.
+- When reconnected, shows a brief "back online" success banner that auto-dismisses after 3 seconds.
+- `role="status"` and `aria-live="assertive"` ensure screen readers announce connection changes.
+- Safe area inset on the bottom padding prevents the banner from being obscured by home indicators.
+- Reduced motion support disables the slide-up animation.
+- Returns `null` when online and not recently reconnected — zero DOM footprint when not needed.
 
 ---
 

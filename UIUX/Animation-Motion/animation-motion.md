@@ -171,6 +171,107 @@ Linear and cubic-bezier easing feels mechanical. Spring physics produce natural-
 
 Use "snappy" for most UI interactions. Reserve "bouncy" for playful interfaces or celebratory moments. Use "stiff" when the animation should feel like a direct response to the user's finger.
 
+### 10. Scroll-Driven Animations
+
+CSS now supports scroll-driven animations natively via `animation-timeline`, eliminating the need for JavaScript `IntersectionObserver` or scroll event handlers for many common patterns.
+
+**Two timeline types:**
+
+- **`scroll()`** — Progress-based. The animation advances as the user scrolls a container. At scroll position 0%, the animation is at its start; at 100% scroll, the animation is at its end. Use for progress indicators, parallax, and scroll-linked reveals.
+
+- **`view()`** — Visibility-based. The animation is driven by an element's intersection with its scrollport (the viewport or scroll container). When the element enters the viewport, the animation starts; as it crosses the viewport, it progresses; when it exits, it completes. Use for scroll-triggered fade-ins, scale-ups, and slide-ins.
+
+```css
+/* Progress bar that fills as the user scrolls the page */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--color-primary);
+  transform-origin: left;
+  animation: grow-width linear;
+  animation-timeline: scroll();
+}
+
+@keyframes grow-width {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* Element fades in as it enters the viewport */
+.scroll-reveal {
+  animation: fade-in-up linear both;
+  animation-timeline: view();
+  animation-range: entry 0% entry 100%;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+```
+
+**`animation-range`** controls which portion of the scroll/view timeline maps to the animation. `entry 0%` means the element's leading edge touches the viewport bottom. `entry 100%` means the element is fully inside the viewport. This lets you fine-tune when the animation starts and ends.
+
+**Browser support:** Scroll-driven animations are supported in Chrome 115+, Edge 115+, and Firefox 132+. Safari support is behind a flag as of early 2026. Use progressive enhancement — the content is visible without the animation; the animation is an enhancement.
+
+### 11. CSS `@starting-style` for `display: none` Animations
+
+Historically, CSS could not animate elements transitioning from `display: none` to `display: block` because there is no "before" state to transition from. The `@starting-style` rule solves this by defining the initial style for an element's entry animation.
+
+```css
+/* Dialog that fades and scales in when shown */
+dialog {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 200ms ease-out, transform 200ms ease-out,
+              display 200ms ease-out allow-discrete,
+              overlay 200ms ease-out allow-discrete;
+
+  /* Starting style: where the animation begins when dialog opens */
+  @starting-style {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+/* Closing state — where the animation ends before display: none */
+dialog:not([open]) {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+/* Backdrop */
+dialog::backdrop {
+  background: oklch(0 0 0 / 0.5);
+  transition: background 200ms ease-out, display 200ms allow-discrete, overlay 200ms allow-discrete;
+
+  @starting-style {
+    background: oklch(0 0 0 / 0);
+  }
+}
+
+dialog:not([open])::backdrop {
+  background: oklch(0 0 0 / 0);
+}
+```
+
+**Key details:**
+- `@starting-style` defines the "from" state for an element appearing for the first time.
+- `allow-discrete` on `transition` allows `display` and `overlay` to participate in the transition (new CSS feature — these are discrete properties that normally cannot transition).
+- The `:not([open])` selector defines the "to" state for the closing animation.
+- This replaces JavaScript-based dialog animations entirely — no `AnimatePresence`, no manual class toggling.
+
+**Browser support:** Chrome 117+, Safari 17.5+, Firefox 131+.
+
 ---
 
 ## LLM Instructions
@@ -1001,6 +1102,194 @@ function AnimatedModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
 - SSR-safe: defaults to `false` on the server to avoid hydration mismatches.
 - The Framer Motion example conditionally simplifies animations to opacity-only fades, which are well-tolerated by users with vestibular disorders.
 - The modal retains its opacity entrance/exit even in reduced motion mode, so the user still sees the state change -- just without spatial movement.
+
+### 5. Scroll-Driven Fade-In (CSS-Only, No JavaScript)
+
+A complete scroll-reveal animation using `animation-timeline: view()` — no Intersection Observer, no JavaScript.
+
+```html
+<section class="features">
+  <div class="feature-card scroll-reveal">
+    <h3>Lightning fast</h3>
+    <p>Built for speed from the ground up.</p>
+  </div>
+  <div class="feature-card scroll-reveal">
+    <h3>Beautifully simple</h3>
+    <p>Powerful features, zero complexity.</p>
+  </div>
+  <div class="feature-card scroll-reveal">
+    <h3>Always secure</h3>
+    <p>Enterprise-grade security by default.</p>
+  </div>
+</section>
+```
+
+```css
+/* ---- Scroll-driven reveal animation ---- */
+
+.scroll-reveal {
+  /* Animation drives from transparent+shifted to visible+in-place */
+  animation: scroll-fade-in linear both;
+
+  /* Driven by the element's visibility in the scrollport */
+  animation-timeline: view();
+
+  /* Start when the element's top edge enters the viewport (entry 0%)
+     Complete when the element is 40% inside the viewport (entry 40%) */
+  animation-range: entry 0% entry 40%;
+}
+
+@keyframes scroll-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(3rem) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Stagger siblings for a cascading effect */
+.scroll-reveal:nth-child(2) {
+  animation-range: entry 5% entry 45%;
+}
+.scroll-reveal:nth-child(3) {
+  animation-range: entry 10% entry 50%;
+}
+
+/* ---- Reduced motion: disable scroll animations ---- */
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---- Fallback for unsupported browsers ---- */
+@supports not (animation-timeline: view()) {
+  .scroll-reveal {
+    /* Content is visible without animation */
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}
+
+/* ---- Supporting layout ---- */
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 4rem 1rem;
+}
+
+.feature-card {
+  padding: 2rem;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 0.75rem;
+  background: var(--color-surface, #ffffff);
+}
+```
+
+**Why this works:**
+- Pure CSS — no JavaScript, no Intersection Observer, no scroll event listeners.
+- `animation-timeline: view()` links the animation progress to the element's visibility in the viewport.
+- `animation-range: entry 0% entry 40%` means the animation completes by the time the element is 40% visible, so it feels responsive without requiring the user to scroll the element fully into view.
+- Staggered `animation-range` on siblings creates a natural cascade effect.
+- `prefers-reduced-motion` disables the animation entirely for users who prefer no motion.
+- `@supports` fallback ensures content is visible in browsers that do not support scroll-driven animations.
+- Content is always accessible — the animation is a progressive enhancement.
+
+---
+
+### 6. `@starting-style` Dialog Animation (CSS-Only)
+
+Animate a `<dialog>` element opening and closing without any JavaScript animation library.
+
+```html
+<dialog id="demo-dialog">
+  <h2>Confirm action</h2>
+  <p>This can't be undone. Are you sure?</p>
+  <form method="dialog">
+    <button value="cancel" class="btn-secondary">Cancel</button>
+    <button value="confirm" class="btn-primary">Confirm</button>
+  </form>
+</dialog>
+
+<button onclick="document.getElementById('demo-dialog').showModal()">
+  Open dialog
+</button>
+```
+
+```css
+/* ---- Dialog enter/exit animation via @starting-style ---- */
+
+dialog {
+  border: none;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 420px;
+  width: 90vw;
+  box-shadow: 0 20px 60px oklch(0 0 0 / 0.2);
+
+  /* Open state */
+  opacity: 1;
+  transform: translateY(0) scale(1);
+
+  /* Transition for closing */
+  transition:
+    opacity 200ms ease-in,
+    transform 200ms ease-in,
+    display 200ms allow-discrete,
+    overlay 200ms allow-discrete;
+
+  /* Entry animation: starting point when dialog opens */
+  @starting-style {
+    opacity: 0;
+    transform: translateY(1rem) scale(0.97);
+  }
+}
+
+/* Closing state */
+dialog:not([open]) {
+  opacity: 0;
+  transform: translateY(1rem) scale(0.97);
+}
+
+/* Backdrop */
+dialog::backdrop {
+  background: oklch(0 0 0 / 0.4);
+  transition:
+    background 200ms ease-out,
+    display 200ms allow-discrete,
+    overlay 200ms allow-discrete;
+
+  @starting-style {
+    background: oklch(0 0 0 / 0);
+  }
+}
+
+dialog:not([open])::backdrop {
+  background: oklch(0 0 0 / 0);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  dialog,
+  dialog::backdrop {
+    transition-duration: 0.01ms !important;
+  }
+}
+```
+
+**Why this works:**
+- `@starting-style` provides the initial state for the opening animation — no JavaScript animation library needed.
+- `allow-discrete` on `display` and `overlay` transitions lets the browser keep the dialog rendered during the exit animation before setting `display: none`.
+- The closing animation is handled by the `:not([open])` selector and the transition declaration.
+- Native `<dialog>` provides built-in focus trapping, Escape key dismissal, and backdrop click handling.
+- Zero JavaScript for the animation — only a one-line `showModal()` call to open.
 
 ---
 

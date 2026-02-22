@@ -192,6 +192,58 @@ Accessibility is increasingly a legal obligation, not just a best practice.
 
 **Key takeaway:** If you target WCAG 2.2 AA, you meet the requirements of virtually every current accessibility law globally. The cost of retrofitting accessibility after a lawsuit or complaint is orders of magnitude higher than building it in from the start.
 
+### 11. Cognitive Accessibility
+
+WCAG 2.2 includes success criteria that address cognitive load, not just visual and motor accessibility. These affect users with cognitive disabilities, learning disabilities, attention disorders, and also benefit all users under stress or distraction.
+
+**Key WCAG 2.2 cognitive criteria:**
+
+- **3.3.7 Redundant Entry (A):** Do not require users to re-enter information they have already provided in the same session. Pre-fill from previous steps.
+- **3.3.8 Accessible Authentication (AA):** Do not rely on cognitive function tests (CAPTCHAs, puzzles, memory-based security questions) as the sole authentication mechanism. Allow copy-paste into password fields. Support password managers. Provide alternatives to cognitive tests.
+- **3.2.6 Consistent Help (A):** If a help mechanism is available (chat, phone, FAQ link), place it in a consistent location across all pages.
+
+**General cognitive accessibility principles:**
+1. **Minimize cognitive load.** Break complex tasks into steps. Show one thing at a time. Use progressive disclosure.
+2. **Be predictable.** Consistent navigation, consistent layout, consistent interaction patterns. Unexpected behavior increases cognitive burden.
+3. **Provide clear instructions.** Do not rely on the user inferring what to do. Label every form field. Describe every step. Use placeholder text as a hint, not a replacement for labels.
+4. **Allow ample time.** Do not impose time limits on form completion or session duration without providing extensions. WCAG 2.2.1 requires timeout warnings with the option to extend.
+5. **Support error recovery.** Clear error messages, easy correction, and the ability to undo.
+
+### 12. Touch Accessibility (WCAG 2.5.8 Target Size)
+
+WCAG 2.5.8 (Level AA, new in WCAG 2.2) requires that touch targets be at least **24x24 CSS pixels**, with sufficient spacing from adjacent targets that the total interactive area is at least 24px in every direction. The older 2.5.5 (Level AAA) requires 44x44px.
+
+**Practical guidance:**
+- **48x48px minimum** is the recommended target for all interactive elements (aligns with Android/iOS guidelines). Meeting 48px satisfies both WCAG 2.5.8 (24px) and 2.5.5 (44px) with margin.
+- **8px minimum spacing** between adjacent touch targets.
+- **Padding expands the target.** A 16px icon with 16px padding is a 48px target. The visual size can be smaller than the touch target.
+- **Exceptions:** Inline links within body text and controls whose size is determined by the user agent (native `<select>`, etc.) are exempt.
+
+```css
+/* Ensure all interactive elements meet touch target minimums */
+button,
+a,
+input[type="checkbox"],
+input[type="radio"],
+[role="button"],
+[role="tab"],
+[role="menuitem"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* For small visual elements, use padding to expand touch area */
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;   /* visual size */
+  height: 24px;
+  padding: 12px;  /* expands to 48px touch target */
+  box-sizing: content-box;
+}
+```
+
 ---
 
 ## LLM Instructions
@@ -822,6 +874,256 @@ Use this checklist to audit any web page. Each item maps to WCAG 2.2 AA success 
 - [ ] ESLint eslint-plugin-jsx-a11y passes with 0 errors
 - [ ] Pa11y or similar CI tool integrated into the build pipeline
 ```
+
+---
+
+### Example 5: axe-core Integration Test (Playwright)
+
+Automated accessibility testing integrated into your E2E test suite.
+
+```typescript
+// tests/accessibility.spec.ts
+import { test, expect } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
+
+// Test every critical page for accessibility violations
+const pages = [
+  { name: "Home", path: "/" },
+  { name: "Dashboard", path: "/dashboard" },
+  { name: "Settings", path: "/settings" },
+  { name: "Login", path: "/login" },
+  { name: "Signup", path: "/signup" },
+];
+
+for (const page of pages) {
+  test(`${page.name} page should have no accessibility violations`, async ({
+    page: playwrightPage,
+  }) => {
+    await playwrightPage.goto(page.path);
+
+    // Wait for page content to load
+    await playwrightPage.waitForLoadState("networkidle");
+
+    const results = await new AxeBuilder({ page: playwrightPage })
+      .withTags(["wcag2a", "wcag2aa", "wcag22aa"]) // WCAG 2.2 AA
+      .analyze();
+
+    // Report violations with helpful output
+    const violations = results.violations.map((v) => ({
+      id: v.id,
+      impact: v.impact,
+      description: v.description,
+      nodes: v.nodes.length,
+      help: v.helpUrl,
+    }));
+
+    if (violations.length > 0) {
+      console.table(violations);
+    }
+
+    expect(results.violations).toEqual([]);
+  });
+
+  // Test dark mode separately — contrast failures often differ
+  test(`${page.name} page (dark mode) should have no a11y violations`, async ({
+    page: playwrightPage,
+  }) => {
+    // Set dark mode preference
+    await playwrightPage.emulateMedia({ colorScheme: "dark" });
+    await playwrightPage.goto(page.path);
+    await playwrightPage.waitForLoadState("networkidle");
+
+    const results = await new AxeBuilder({ page: playwrightPage })
+      .withTags(["wcag2a", "wcag2aa", "wcag22aa"])
+      .analyze();
+
+    expect(results.violations).toEqual([]);
+  });
+}
+
+// Test specific interactive states
+test("Modal dialog should be accessible when open", async ({ page }) => {
+  await page.goto("/dashboard");
+  await page.click('button:has-text("New project")');
+
+  // Wait for modal to appear
+  await page.waitForSelector('[role="dialog"]');
+
+  const results = await new AxeBuilder({ page })
+    .include('[role="dialog"]') // Scope to just the modal
+    .withTags(["wcag2a", "wcag2aa"])
+    .analyze();
+
+  expect(results.violations).toEqual([]);
+});
+```
+
+**Key decisions:**
+- Tests every critical page route, not just the homepage. Accessibility issues often vary by page.
+- Separate dark mode tests catch contrast violations that only appear in dark theme.
+- `withTags(["wcag2a", "wcag2aa", "wcag22aa"])` targets WCAG 2.2 AA compliance.
+- Modal test scopes axe to just the dialog with `.include()` for focused, relevant results.
+- `console.table(violations)` provides readable CI output when violations are found.
+
+---
+
+### Example 6: Accessible Tab Component (React)
+
+A fully accessible tab component following the WAI-ARIA Tabs pattern.
+
+```tsx
+import { useState, useRef, useCallback } from "react";
+
+type Tab = {
+  id: string;
+  label: string;
+  content: React.ReactNode;
+};
+
+interface TabsProps {
+  tabs: Tab[];
+  defaultTab?: string;
+  label: string; // Accessible label for the tablist
+}
+
+export function Tabs({ tabs, defaultTab, label }: TabsProps) {
+  const [activeTab, setActiveTab] = useState(defaultTab || tabs[0]?.id);
+  const tabRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
+
+  const setTabRef = useCallback(
+    (id: string) => (el: HTMLButtonElement | null) => {
+      if (el) tabRefs.current.set(id, el);
+      else tabRefs.current.delete(id);
+    },
+    []
+  );
+
+  function handleKeyDown(e: React.KeyboardEvent) {
+    const currentIndex = tabs.findIndex((t) => t.id === activeTab);
+    let nextIndex: number | null = null;
+
+    switch (e.key) {
+      case "ArrowRight":
+        nextIndex = (currentIndex + 1) % tabs.length;
+        break;
+      case "ArrowLeft":
+        nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+        break;
+      case "Home":
+        nextIndex = 0;
+        break;
+      case "End":
+        nextIndex = tabs.length - 1;
+        break;
+      default:
+        return;
+    }
+
+    e.preventDefault();
+    const nextTab = tabs[nextIndex];
+    setActiveTab(nextTab.id);
+    tabRefs.current.get(nextTab.id)?.focus();
+  }
+
+  return (
+    <div>
+      {/* Tab list */}
+      <div
+        role="tablist"
+        aria-label={label}
+        onKeyDown={handleKeyDown}
+        className="tab-list"
+      >
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            ref={setTabRef(tab.id)}
+            role="tab"
+            id={`tab-${tab.id}`}
+            aria-selected={activeTab === tab.id}
+            aria-controls={`panel-${tab.id}`}
+            tabIndex={activeTab === tab.id ? 0 : -1}
+            onClick={() => setActiveTab(tab.id)}
+            className={`tab-button ${activeTab === tab.id ? "active" : ""}`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Tab panels */}
+      {tabs.map((tab) => (
+        <div
+          key={tab.id}
+          role="tabpanel"
+          id={`panel-${tab.id}`}
+          aria-labelledby={`tab-${tab.id}`}
+          hidden={activeTab !== tab.id}
+          tabIndex={0}
+          className="tab-panel"
+        >
+          {tab.content}
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+
+```css
+.tab-list {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--color-border, #e2e8f0);
+}
+
+.tab-button {
+  padding: 0.75rem 1rem;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--color-text-muted, #6b7280);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  min-height: 44px;
+  transition: color 150ms ease, border-color 150ms ease;
+}
+
+.tab-button:hover {
+  color: var(--color-text, #1f2937);
+}
+
+.tab-button.active {
+  color: var(--color-primary, #2563eb);
+  border-bottom-color: var(--color-primary, #2563eb);
+}
+
+.tab-button:focus-visible {
+  outline: 2px solid var(--color-primary, #2563eb);
+  outline-offset: -2px;
+  border-radius: 2px;
+}
+
+.tab-panel {
+  padding: 1.5rem 0;
+}
+
+.tab-panel:focus-visible {
+  outline: 2px solid var(--color-primary, #2563eb);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+```
+
+**Why this works:**
+- Follows the WAI-ARIA Tabs pattern exactly: `role="tablist"`, `role="tab"`, `role="tabpanel"`.
+- Arrow keys move between tabs (roving tabindex pattern). Only the active tab is in the tab order (`tabIndex={0}`); inactive tabs have `tabIndex={-1}`.
+- Home/End jump to first/last tab.
+- `aria-selected` indicates the active tab. `aria-controls` links each tab to its panel. `aria-labelledby` links each panel back to its tab.
+- Tab panels have `tabIndex={0}` so keyboard users can Tab into the panel content.
+- Focus indicator uses `:focus-visible` to avoid showing on mouse click.
+- Minimum 44px height for touch accessibility.
 
 ---
 

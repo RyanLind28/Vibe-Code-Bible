@@ -97,7 +97,120 @@ Learn and apply these recurring layout patterns:
 - **Card Grid**: `auto-fill` / `auto-fit` with `minmax()` to create a grid that adds or removes columns automatically.
 - **Responsive Tables**: On small screens, tables are unreadable. Strategies include horizontal scroll, card-based stacking, or hiding non-essential columns.
 
-### 8. Testing Responsive Design
+### 8. CSS Subgrid
+
+CSS Subgrid allows a grid child to inherit track definitions (rows, columns, or both) from its parent grid. This solves the long-standing problem of aligning nested content across siblings.
+
+Without subgrid, each card in a grid manages its own internal layout independently. If one card's title wraps to two lines, its body text shifts down while sibling cards remain unaffected — the row of cards looks misaligned.
+
+With subgrid, the card's internal elements participate in the parent grid's track sizing. The title row across all cards is sized to the tallest title. All body text aligns. All footers align.
+
+```css
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  display: grid;
+  /* Inherit row tracks from the parent grid — NOT possible
+     without subgrid. Instead, define internal rows and let
+     subgrid align them across siblings. */
+  grid-row: span 3; /* title, body, footer */
+  grid-template-rows: subgrid;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 0.75rem;
+}
+```
+
+**Use subgrid when** you need content inside grid children to align across siblings — cards with titles, descriptions, and CTAs; pricing tables with feature rows; any repeating layout where internal sections must line up.
+
+**Browser support:** Subgrid is supported in all modern browsers (Chrome 117+, Firefox 71+, Safari 16+). It is production-ready.
+
+### 9. Dynamic Viewport Units (`dvh`, `svh`, `lvh`)
+
+The classic `vh` unit is broken on mobile. `100vh` on iOS Safari includes the area behind the browser's collapsible URL bar. The result: a "full-screen" hero section has its bottom content hidden behind the URL bar when it is visible, and the layout jumps when it collapses on scroll.
+
+CSS now provides three dynamic viewport units that solve this:
+
+| Unit | Meaning | Value |
+|------|---------|-------|
+| `svh` | **Small** viewport height | Viewport with all dynamic UI (URL bar, toolbar) **visible** — the shortest possible viewport. |
+| `lvh` | **Large** viewport height | Viewport with all dynamic UI **hidden** — the tallest possible viewport. |
+| `dvh` | **Dynamic** viewport height | The *current* viewport height, updating in real-time as the URL bar collapses/expands. |
+
+**When to use each:**
+
+- **`100dvh` for full-screen sections.** The hero section adapts as the mobile browser chrome collapses. This is the correct replacement for `100vh` on mobile.
+- **`100svh` for elements that must never be obscured.** Guaranteed to fit within the smallest viewport state. Good for critical CTAs or sticky footers where content must always be visible.
+- **`100lvh` rarely.** Only use for decorative backgrounds or elements where overflowing behind the URL bar is acceptable.
+
+```css
+.hero {
+  min-height: 100dvh; /* adapts to mobile browser chrome */
+}
+
+/* Fallback for older browsers */
+@supports not (min-height: 100dvh) {
+  .hero {
+    min-height: 100vh;
+  }
+}
+```
+
+### 10. Responsive Utilities in Tailwind CSS
+
+Tailwind CSS provides a responsive utility system through breakpoint prefixes that align with the mobile-first approach. Every utility class can be prefixed with a breakpoint to apply it conditionally.
+
+```html
+<!-- Single column on mobile, 2 columns on tablet, 3 on desktop -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  ...
+</div>
+
+<!-- Stack vertically on mobile, horizontal on desktop -->
+<div class="flex flex-col lg:flex-row gap-4">
+  ...
+</div>
+
+<!-- Text size scales up at breakpoints -->
+<h1 class="text-2xl md:text-4xl lg:text-5xl">
+  Responsive heading
+</h1>
+
+<!-- Hide on mobile, show on desktop -->
+<aside class="hidden lg:block">
+  Sidebar content
+</aside>
+
+<!-- Show on mobile only -->
+<nav class="block lg:hidden">
+  Bottom navigation
+</nav>
+```
+
+The breakpoint prefixes follow Tailwind's mobile-first convention:
+- No prefix = base (mobile)
+- `sm:` = 640px+
+- `md:` = 768px+
+- `lg:` = 1024px+
+- `xl:` = 1280px+
+- `2xl:` = 1536px+
+
+**Container queries in Tailwind:** As of Tailwind v3.4+, use the `@container` plugin for component-level responsiveness:
+
+```html
+<div class="@container">
+  <div class="flex flex-col @md:flex-row gap-4">
+    <!-- Switches to row layout when container is >= 448px -->
+  </div>
+</div>
+```
+
+### 11. Testing Responsive Design
 
 Responsive design must be tested, not assumed:
 
@@ -141,6 +254,21 @@ When an AI assistant is asked to build responsive layouts or work on responsive 
 9. **Prefer intrinsic sizing.** Use `auto-fill` / `auto-fit` with `minmax()` in CSS Grid to let the browser decide how many columns fit. This eliminates the need for many breakpoints.
 
 10. **Always include a viewport meta tag.** If generating an HTML document, include `<meta name="viewport" content="width=device-width, initial-scale=1">`. Without it, mobile browsers render at a desktop width and scale down.
+
+### "Make This Responsive" Checklist
+
+When a user says "make this responsive" or "make this work on mobile," run through this checklist:
+
+1. **Is the layout mobile-first?** Rewrite to mobile-first if it uses `max-width` breakpoints.
+2. **Are font sizes fluid?** Replace fixed `px` font sizes with `clamp()` values.
+3. **Are images responsive?** Add `srcset`, `sizes`, `max-width: 100%`, and `aspect-ratio`.
+4. **Do containers use `max-width` instead of fixed `width`?** Replace `width: 1200px` with `width: 100%; max-width: 1200px`.
+5. **Are grid layouts using `auto-fill`/`auto-fit`?** Replace fixed column counts with `repeat(auto-fill, minmax(280px, 1fr))`.
+6. **Do reusable components use container queries?** Convert viewport media queries inside components to `@container` queries.
+7. **Are touch targets 48px minimum?** Check all buttons, links, and interactive elements.
+8. **Is `gap` used instead of margins for spacing?** Replace sibling margins with `gap` on the flex/grid parent.
+9. **Are viewport units correct?** Replace `100vh` with `100dvh` for full-screen sections.
+10. **Is the viewport meta tag present?** Verify `<meta name="viewport" content="width=device-width, initial-scale=1">`.
 
 ### When the User Asks for a Specific Layout
 
@@ -509,6 +637,174 @@ A hero image that serves the correct resolution for every device and screen dens
 - `sizes="100vw"` tells the browser the image spans the full viewport width.
 - For images in a constrained column, `sizes` would be something like `(min-width: 1024px) 66vw, 100vw`.
 
+### 5. Responsive Data Table (Card Stacking on Mobile)
+
+Tables are inherently wide. On mobile, horizontal scrolling is a poor experience. This pattern transforms table rows into stacked cards on narrow screens.
+
+```html
+<div class="table-responsive">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td data-label="Name">Jane Smith</td>
+        <td data-label="Email">jane@example.com</td>
+        <td data-label="Role">Designer</td>
+        <td data-label="Status"><span class="badge badge--active">Active</span></td>
+      </tr>
+      <tr>
+        <td data-label="Name">Alex Johnson</td>
+        <td data-label="Email">alex@example.com</td>
+        <td data-label="Role">Developer</td>
+        <td data-label="Status"><span class="badge badge--inactive">Inactive</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+```
+
+```css
+/* ---- Base: standard table for wide screens ---- */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.data-table th,
+.data-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border, #e2e8f0);
+}
+
+.data-table th {
+  font-weight: 600;
+  color: var(--color-text-muted, #6b7280);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ---- Mobile: stack rows as cards ---- */
+@media (max-width: 639px) {
+  .data-table thead {
+    /* Visually hide the header row, keep accessible */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+
+  .data-table tr {
+    display: block;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    border: 1px solid var(--color-border, #e2e8f0);
+    border-radius: 0.5rem;
+    background: var(--color-surface, #ffffff);
+  }
+
+  .data-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.375rem 0;
+    border-bottom: none;
+  }
+
+  .data-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    font-size: 0.75rem;
+    color: var(--color-text-muted, #6b7280);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-right: 1rem;
+  }
+
+  .data-table td:first-child {
+    font-weight: 600;
+    font-size: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-border, #e2e8f0);
+    margin-bottom: 0.25rem;
+  }
+
+  /* Override the label for the name since it's the card "title" */
+  .data-table td:first-child::before {
+    display: none;
+  }
+}
+```
+
+**Key decisions:**
+- On desktop, a standard table with sortable column headers.
+- On mobile (below `sm` breakpoint), each row becomes a card. The `data-label` attributes render as inline labels so users know what each value means without the header row.
+- The first cell (`Name`) becomes the card title, visually larger and without a label.
+- This is one of the rare valid uses of `max-width` — it is a targeted override for a specific mobile treatment, not the base layout approach.
+
+### 6. CSS Subgrid Alignment Example
+
+Cards with aligned internal sections using subgrid:
+
+```css
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  /* Each card spans 3 implicit row tracks */
+  grid-auto-rows: auto;
+  gap: 1.5rem;
+}
+
+.feature-card {
+  display: grid;
+  grid-row: span 3;
+  grid-template-rows: subgrid;
+  gap: 0.5rem;
+  padding: 1.5rem;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 0.75rem;
+}
+
+/* Row 1: icon + title */
+.feature-card__header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 600;
+  font-size: 1.125rem;
+}
+
+/* Row 2: description (stretches to fill available space) */
+.feature-card__body {
+  color: var(--color-text-muted, #6b7280);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* Row 3: CTA — aligned across all cards */
+.feature-card__footer {
+  align-self: end;
+}
+```
+
+**Key decisions:**
+- `grid-row: span 3` reserves three row tracks per card.
+- `grid-template-rows: subgrid` inherits sizing from the parent, so all cards' headers, descriptions, and footers align across the row.
+- No JavaScript needed — pure CSS alignment.
+
 ---
 
 ## Common Mistakes
@@ -562,6 +858,30 @@ A hero image that serves the correct resolution for every device and screen dens
 **Wrong:** Assuming mobile is always portrait. A phone in landscape mode has a very wide, very short viewport — layouts that rely on vertical space can break dramatically.
 
 **Fix:** Test both orientations. Use `min-height` queries or `dvh` units when vertical space matters (e.g., fullscreen heroes, sticky headers).
+
+### 11. Using `100vh` on Mobile
+**Wrong:** Setting a hero section to `height: 100vh` and testing only on desktop. On iOS Safari and most mobile browsers, `100vh` includes the area behind the collapsible address bar. The bottom of the hero is hidden until the user scrolls and the bar collapses, then the layout jumps.
+
+**Fix:** Use `100dvh` (dynamic viewport height) which adapts as the mobile browser chrome collapses. Include a fallback for older browsers:
+```css
+.hero {
+  min-height: 100vh; /* fallback */
+  min-height: 100dvh; /* modern browsers */
+}
+```
+
+### 12. Not Using `gap` for Sibling Spacing
+**Wrong:** Using `margin-bottom` on every child in a flex or grid container, then removing the margin from the last child with `:last-child { margin-bottom: 0 }`. This breaks when items reorder, wrap, or are conditionally rendered.
+
+**Fix:** Use `gap` on the flex or grid parent. It applies spacing only *between* children, never on the outside edges. No last-child overrides needed.
+```css
+/* Right — gap on the parent */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+```
 
 ---
 

@@ -32,7 +32,7 @@ Each `.md` file is a self-contained knowledge module covering **principles, LLM-
 | [Frontend](./Frontend/) | React/Next.js, CSS Architecture, Performance, State Management, Component Patterns | Planned |
 | [Backend](./Backend/) | API Design, Auth, Database Design, Caching, Error Handling, Serverless | Planned |
 | [DevOps](./DevOps/) | CI/CD, Docker, Cloud Architecture, Monitoring, Infrastructure as Code | Planned |
-| [Security](./Security/) | OWASP Top 10, Auth Patterns, Data Protection, API Security, Supply Chain | Planned |
+| [Security](./Security/) | Secrets Management, Authentication, Frontend Security, Backend Security, API Security, Data Protection, Security Headers, Supply Chain, Security Testing | Complete |
 | [AI Integration](./AI-Integration/) | LLM Patterns, Prompt Engineering, RAG, AI Agents, Embeddings | Planned |
 | [Testing](./Testing/) | Unit Testing, E2E Testing, Performance Testing, Test Strategy | Planned |
 | [Product & Growth](./Product-Growth/) | Analytics, A/B Testing, Conversion Optimization, Onboarding | Planned |

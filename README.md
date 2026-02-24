@@ -36,7 +36,7 @@ Each `.md` file is a self-contained knowledge module covering **principles, LLM-
 | [AI Integration](./AI-Integration/) | LLM Patterns, Prompt Engineering, RAG, AI Agents, Embeddings | Planned |
 | [Testing](./Testing/) | Unit Testing, E2E Testing, Performance Testing, Test Strategy | Planned |
 | [Product & Growth](./Product-Growth/) | Analytics, A/B Testing, Conversion Optimization, Onboarding | Planned |
-| [Copywriting](./Copywriting/) | UX Writing, Landing Pages, Email Copy, Microcopy, CTAs | Planned |
+| [Copywriting](./Copywriting/) | SEO Copywriting, UX Writing, Landing Pages, Email Copy, CTAs & Conversion, Headlines & Hooks, Brand Voice & Tone, Product Copy, Content Writing | Complete |
 
 ## File Format
 

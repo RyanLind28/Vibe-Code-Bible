@@ -1110,6 +1110,6 @@ function Tabs({ tabs, panels }) { ... }
 
 ---
 
-See also: [React Fundamentals](../React-Fundamentals/react-fundamentals.md) | [TypeScript-React](../TypeScript-React/typescript-react.md) | [CSS Architecture](../CSS-Architecture/css-architecture.md) | [Accessibility](../../UIUX/Accessibility/accessibility.md) | [Design Systems](../../UIUX/Design-Systems/design-systems.md) | [UX Patterns](../../UIUX/UX-Patterns/ux-patterns.md)
-
-Last reviewed: 2026-02
+> **See also:** [React Fundamentals](../React-Fundamentals/react-fundamentals.md) | [TypeScript-React](../TypeScript-React/typescript-react.md) | [CSS Architecture](../CSS-Architecture/css-architecture.md) | [Accessibility](../../UIUX/Accessibility/accessibility.md) | [Design Systems](../../UIUX/Design-Systems/design-systems.md) | [UX Patterns](../../UIUX/UX-Patterns/ux-patterns.md)
+>
+> **Last reviewed:** 2026-02

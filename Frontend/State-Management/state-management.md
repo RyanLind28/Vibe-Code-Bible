@@ -1042,6 +1042,6 @@ const { data: products } = useQuery({
 
 ---
 
-See also: [React Fundamentals](../React-Fundamentals/react-fundamentals.md) | [Data Fetching](../Data-Fetching/data-fetching.md) | [Forms & Validation](../Forms-Validation/forms-validation.md) | [Component Patterns](../Component-Patterns/component-patterns.md) | [Next.js Patterns](../Nextjs-Patterns/nextjs-patterns.md) | [UX Patterns](../../UIUX/UX-Patterns/ux-patterns.md)
-
-Last reviewed: 2026-02
+> **See also:** [React Fundamentals](../React-Fundamentals/react-fundamentals.md) | [Data Fetching](../Data-Fetching/data-fetching.md) | [Forms & Validation](../Forms-Validation/forms-validation.md) | [Component Patterns](../Component-Patterns/component-patterns.md) | [Next.js Patterns](../Nextjs-Patterns/nextjs-patterns.md) | [UX Patterns](../../UIUX/UX-Patterns/ux-patterns.md)
+>
+> **Last reviewed:** 2026-02

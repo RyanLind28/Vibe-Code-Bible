@@ -883,6 +883,6 @@ Inline styles are acceptable only for truly dynamic values (user-configurable co
 
 ---
 
-See also: [Design Systems](../../UIUX/Design-Systems/design-systems.md) | [Dark Mode](../../UIUX/Dark-Mode/dark-mode.md) | [Typography & Color](../../UIUX/Typography-Color/typography-color.md) | [Responsive Design](../../UIUX/Responsive-Design/responsive-design.md) | [Animation & Motion](../../UIUX/Animation-Motion/animation-motion.md) | [Next.js Patterns](../Nextjs-Patterns/nextjs-patterns.md) | [Component Patterns](../Component-Patterns/component-patterns.md)
-
-Last reviewed: 2026-02
+> **See also:** [Design Systems](../../UIUX/Design-Systems/design-systems.md) | [Dark Mode](../../UIUX/Dark-Mode/dark-mode.md) | [Typography & Color](../../UIUX/Typography-Color/typography-color.md) | [Responsive Design](../../UIUX/Responsive-Design/responsive-design.md) | [Animation & Motion](../../UIUX/Animation-Motion/animation-motion.md) | [Next.js Patterns](../Nextjs-Patterns/nextjs-patterns.md) | [Component Patterns](../Component-Patterns/component-patterns.md)
+>
+> **Last reviewed:** 2026-02

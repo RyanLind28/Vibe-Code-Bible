@@ -866,6 +866,6 @@ useEffect(() => {
 
 ---
 
-See also: [Next.js Patterns](../Nextjs-Patterns/nextjs-patterns.md) | [TypeScript-React](../TypeScript-React/typescript-react.md) | [Component Patterns](../Component-Patterns/component-patterns.md) | [State Management](../State-Management/state-management.md) | [Data Fetching](../Data-Fetching/data-fetching.md) | [Forms & Validation](../Forms-Validation/forms-validation.md)
-
-Last reviewed: 2026-02
+> **See also:** [Next.js Patterns](../Nextjs-Patterns/nextjs-patterns.md) | [TypeScript-React](../TypeScript-React/typescript-react.md) | [Component Patterns](../Component-Patterns/component-patterns.md) | [State Management](../State-Management/state-management.md) | [Data Fetching](../Data-Fetching/data-fetching.md) | [Forms & Validation](../Forms-Validation/forms-validation.md)
+>
+> **Last reviewed:** 2026-02

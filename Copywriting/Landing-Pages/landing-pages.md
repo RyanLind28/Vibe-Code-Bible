@@ -827,3 +827,7 @@ A long-form landing page structure using the Problem-Agitate-Solution framework.
 > **See also:** [SEO Copywriting](../SEO-Copywriting/seo-copywriting.md) | [Headlines & Hooks](../Headlines-Hooks/headlines-hooks.md) | [CTAs & Conversion](../CTAs-Conversion/ctas-conversion.md) | [Product Copy](../Product-Copy/product-copy.md) | [Brand Voice & Tone](../Brand-Voice-Tone/brand-voice-tone.md) | [Title Tags](../../SEO/On-Page-SEO/Title-Tags/title-tags.md) | [Search Intent](../../SEO/On-Page-SEO/Search-Intent/search-intent.md) | [Product Page SEO](../../SEO/E-commerce-SEO/Product-Page-SEO/product-page-seo.md) | [Structured Data](../../SEO/Technical-SEO/Structured-Data/structured-data.md) | [Responsive Design](../../UIUX/Responsive-Design/responsive-design.md) | [Typography & Color](../../UIUX/Typography-Color/typography-color.md) | [Performance](../../Frontend/Performance/performance.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

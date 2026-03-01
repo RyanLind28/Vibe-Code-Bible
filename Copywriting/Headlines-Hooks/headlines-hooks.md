@@ -638,3 +638,7 @@ Analysis:
 > **See also:** [SEO Copywriting](../SEO-Copywriting/seo-copywriting.md) | [Brand Voice & Tone](../Brand-Voice-Tone/brand-voice-tone.md) | [CTAs & Conversion](../CTAs-Conversion/ctas-conversion.md) | [Landing Pages](../Landing-Pages/landing-pages.md) | [Email Copy](../Email-Copy/email-copy.md) | [Content Writing](../Content-Writing/content-writing.md) | [Title Tags](../../SEO/On-Page-SEO/Title-Tags/title-tags.md) | [Search Intent](../../SEO/On-Page-SEO/Search-Intent/search-intent.md) | [Keyword Research](../../SEO/On-Page-SEO/Keyword-Research/keyword-research.md) | [Content Clusters](../../SEO/Content-SEO/Content-Clusters/content-clusters.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

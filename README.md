@@ -72,3 +72,7 @@ Every file follows the same structure so your AI knows what to expect:
 ## License
 
 MIT — Use it, fork it, build with it.
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

@@ -219,3 +219,7 @@ TIER 3 (Industry-Specific — choose relevant):
 *Last reviewed: 2026-02*
 
 **See also:** [Google Business Profile](../Google-Business-Profile/google-business-profile.md) | [Structured Data](../../Technical-SEO/Structured-Data/structured-data.md)
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

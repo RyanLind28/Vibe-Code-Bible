@@ -196,3 +196,7 @@ Comparison:
 *Last reviewed: 2026-02*
 
 **See also:** [Keyword Research](../../Keyword-Research/) | [Search Intent](../../Search-Intent/)
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

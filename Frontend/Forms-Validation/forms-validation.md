@@ -1412,3 +1412,7 @@ const schema = z.object({
 > **See also:** [React Fundamentals](../React-Fundamentals/react-fundamentals.md) | [TypeScript-React](../TypeScript-React/typescript-react.md) | [Next.js Patterns](../Nextjs-Patterns/nextjs-patterns.md) | [Data Fetching](../Data-Fetching/data-fetching.md) | [Component Patterns](../Component-Patterns/component-patterns.md) | [Accessibility](../../UIUX/Accessibility/accessibility.md) | [Backend Security](../../Security/Backend-Security/backend-security.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

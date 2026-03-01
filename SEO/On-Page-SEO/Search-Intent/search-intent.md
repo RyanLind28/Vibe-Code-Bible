@@ -177,3 +177,7 @@ TRANSACTIONAL TEMPLATE:
 *Last reviewed: 2026-02*
 
 **See also:** [Keyword Research](../Keyword-Research/keyword-research.md) | [Title Tags](../Title-Tags/title-tags.md)
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

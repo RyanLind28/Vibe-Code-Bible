@@ -286,3 +286,7 @@ Date: 2025-01-15
 *Last reviewed: 2026-02*
 
 **See also:** [Generative Engine Optimization](../Generative-Engine-Optimization/generative-engine-optimization.md) | [Structured Data](../../Technical-SEO/Structured-Data/structured-data.md)
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

@@ -15,3 +15,7 @@ Product-Growth/
 ## Status
 
 Planned — folders and content coming soon.
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

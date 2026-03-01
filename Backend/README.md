@@ -73,3 +73,7 @@ SSE vs WebSockets vs long polling comparison, Server-Sent Events implementation 
 ## Status
 
 Complete — all 9 guides are written and reviewed. Last updated: 2026-02.
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

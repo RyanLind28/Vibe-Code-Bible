@@ -1017,3 +1017,7 @@ export async function broadcastInvalidation(key: string): Promise<void> {
 > **See also:** [Database-Design](../Database-Design/database-design.md) | [API-Design](../API-Design/api-design.md) | [Serverless-Edge](../Serverless-Edge/serverless-edge.md) | [Error-Handling-Logging](../Error-Handling-Logging/error-handling-logging.md) | [Frontend/Data-Fetching](../../Frontend/Data-Fetching/data-fetching.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

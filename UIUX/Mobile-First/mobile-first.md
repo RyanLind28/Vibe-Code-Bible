@@ -1354,3 +1354,7 @@ export function OfflineIndicator() {
 > **See also:** [Responsive-Design](../Responsive-Design/responsive-design.md) | [UX-Patterns](../UX-Patterns/ux-patterns.md) | [Animation-Motion](../Animation-Motion/animation-motion.md) | [Accessibility](../Accessibility/accessibility.md) | [Dark-Mode](../Dark-Mode/dark-mode.md) | [Design-Systems](../Design-Systems/design-systems.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

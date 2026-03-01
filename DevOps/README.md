@@ -57,3 +57,7 @@ Everything-in-code philosophy, idempotent deployments, state management (remote 
 ## Status
 
 Complete — all 5 guides are written and reviewed. Last updated: 2026-03.
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

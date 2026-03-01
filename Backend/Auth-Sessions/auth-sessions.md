@@ -1282,3 +1282,7 @@ describe("Auth flows", () => {
 > **See also:** [API-Design](../API-Design/api-design.md) | [Database-Design](../Database-Design/database-design.md) | [Error-Handling-Logging](../Error-Handling-Logging/error-handling-logging.md) | [Security/Authentication-Identity](../../Security/Authentication-Identity/authentication-identity.md) | [Security/API-Security](../../Security/API-Security/api-security.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

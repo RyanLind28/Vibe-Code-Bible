@@ -813,3 +813,7 @@ steps:
 > **See also:** [Docker-Containers](../Docker-Containers/docker-containers.md) | [Infrastructure-as-Code](../Infrastructure-as-Code/infrastructure-as-code.md) | [Monitoring-Logging](../Monitoring-Logging/monitoring-logging.md) | [Security/Secrets-Environment](../../Security/Secrets-Environment/secrets-environment.md) | [Backend/Serverless-Edge](../../Backend/Serverless-Edge/serverless-edge.md)
 >
 > **Last reviewed:** 2026-03
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

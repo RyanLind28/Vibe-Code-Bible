@@ -266,3 +266,7 @@ IMPLEMENTATION (canonical tags only — one consistent signal):
 Last reviewed: 2026-02
 
 See also: [Product Page SEO](../../Product-Page-SEO/) | [Structured Data](../../Structured-Data/)
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

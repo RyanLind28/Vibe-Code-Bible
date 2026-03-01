@@ -856,3 +856,7 @@ say "[NEEDS SOURCE]" and explain what source would validate it.
 > **See also:** [SEO Copywriting](../SEO-Copywriting/seo-copywriting.md) | [Headlines & Hooks](../Headlines-Hooks/headlines-hooks.md) | [Product Copy](../Product-Copy/product-copy.md) | [Email Copy](../Email-Copy/email-copy.md) | [Brand Voice & Tone](../Brand-Voice-Tone/brand-voice-tone.md) | [Landing Pages](../Landing-Pages/landing-pages.md) | [Content Clusters](../../SEO/Content-SEO/Content-Clusters/content-clusters.md) | [Topical Authority](../../SEO/Content-SEO/Topical-Authority/topical-authority.md) | [Keyword Research](../../SEO/On-Page-SEO/Keyword-Research/keyword-research.md) | [Internal Linking](../../SEO/On-Page-SEO/Internal-Linking/internal-linking.md) | [Search Intent](../../SEO/On-Page-SEO/Search-Intent/search-intent.md) | [Generative Engine Optimization](../../SEO/AI-SEO/Generative-Engine-Optimization/generative-engine-optimization.md) | [Programmatic SEO](../../SEO/Content-SEO/Programmatic-SEO/programmatic-seo.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

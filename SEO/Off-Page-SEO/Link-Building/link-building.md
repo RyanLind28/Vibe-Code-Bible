@@ -224,3 +224,7 @@ PRIORITY: Target domains that link to BOTH competitors first
 *Last reviewed: 2026-02*
 
 **See also:** [Digital PR](../Digital-PR/digital-pr.md) | [Brand Mentions](../Brand-Mentions/brand-mentions.md) | [Internal Linking](../../On-Page-SEO/Internal-Linking/internal-linking.md)
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

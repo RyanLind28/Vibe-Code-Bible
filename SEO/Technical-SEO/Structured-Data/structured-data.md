@@ -266,3 +266,7 @@ You are a structured data / schema markup specialist. When generating schema:
 > **See also:** [Core Web Vitals](../../Technical-SEO/Core-Web-Vitals/core-web-vitals.md) | [Product Page SEO](../../E-commerce-SEO/Product-Page-SEO/product-page-seo.md) | [Google Business Profile](../../Local-SEO/Google-Business-Profile/google-business-profile.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

@@ -198,3 +198,7 @@ YEAR modifiers:
 *Last reviewed: 2026-02*
 
 **See also:** [Search Intent](../Search-Intent/search-intent.md) | [Title Tags](../Title-Tags/title-tags.md) | [Content Clusters](../../Content-SEO/Content-Clusters/content-clusters.md)
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

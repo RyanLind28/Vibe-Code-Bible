@@ -877,3 +877,7 @@ function SearchPage() {
 > **See also:** [React Fundamentals](../React-Fundamentals/react-fundamentals.md) | [Next.js Patterns](../Nextjs-Patterns/nextjs-patterns.md) | [CSS Architecture](../CSS-Architecture/css-architecture.md) | [Data Fetching](../Data-Fetching/data-fetching.md) | [Responsive Design](../../UIUX/Responsive-Design/responsive-design.md) | [Mobile-First](../../UIUX/Mobile-First/mobile-first.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

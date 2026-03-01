@@ -921,3 +921,7 @@ WHAT CHANGED:
 > **See also:** [Headlines & Hooks](../Headlines-Hooks/headlines-hooks.md) | [Brand Voice & Tone](../Brand-Voice-Tone/brand-voice-tone.md) | [CTAs & Conversion](../CTAs-Conversion/ctas-conversion.md) | [Landing Pages](../Landing-Pages/landing-pages.md) | [Product Copy](../Product-Copy/product-copy.md) | [Content Writing](../Content-Writing/content-writing.md) | [Keyword Research](../../SEO/On-Page-SEO/Keyword-Research/keyword-research.md) | [Search Intent](../../SEO/On-Page-SEO/Search-Intent/search-intent.md) | [Title Tags](../../SEO/On-Page-SEO/Title-Tags/title-tags.md) | [Internal Linking](../../SEO/On-Page-SEO/Internal-Linking/internal-linking.md) | [Topical Authority](../../SEO/Content-SEO/Topical-Authority/topical-authority.md) | [Content Clusters](../../SEO/Content-SEO/Content-Clusters/content-clusters.md) | [Product Page SEO](../../SEO/E-commerce-SEO/Product-Page-SEO/product-page-seo.md) | [Generative Engine Optimization](../../SEO/AI-SEO/Generative-Engine-Optimization/generative-engine-optimization.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

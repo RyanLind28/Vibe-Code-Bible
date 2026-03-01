@@ -316,3 +316,7 @@ def generate_meta(page_type, data):
 *Last reviewed: 2026-02*
 
 **See also:** [Governance](../Governance/governance.md) | [Search Console](../../Analytics/Search-Console/search-console.md)
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

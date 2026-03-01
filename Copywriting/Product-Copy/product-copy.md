@@ -746,3 +746,7 @@ A physical product description with structured data for rich search results.
 > **See also:** [SEO Copywriting](../SEO-Copywriting/seo-copywriting.md) | [CTAs & Conversion](../CTAs-Conversion/ctas-conversion.md) | [Landing Pages](../Landing-Pages/landing-pages.md) | [Headlines & Hooks](../Headlines-Hooks/headlines-hooks.md) | [Content Writing](../Content-Writing/content-writing.md) | [Product Page SEO](../../SEO/E-commerce-SEO/Product-Page-SEO/product-page-seo.md) | [Category Page SEO](../../SEO/E-commerce-SEO/Category-Page-SEO/category-page-seo.md) | [Keyword Research](../../SEO/On-Page-SEO/Keyword-Research/keyword-research.md) | [Structured Data](../../SEO/Technical-SEO/Structured-Data/structured-data.md) | [Search Intent](../../SEO/On-Page-SEO/Search-Intent/search-intent.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

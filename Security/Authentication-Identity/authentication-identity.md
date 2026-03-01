@@ -1494,3 +1494,7 @@ if (!user || !isValid) {
 > **See also:** [Secrets-Environment](../Secrets-Environment/secrets-environment.md) | [API-Security](../API-Security/api-security.md) | [Frontend-Security](../Frontend-Security/frontend-security.md) | [Backend-Security](../Backend-Security/backend-security.md) | [Data-Protection](../Data-Protection/data-protection.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

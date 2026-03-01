@@ -1289,3 +1289,7 @@ export default router;
 > **See also:** [Secrets-Environment](../Secrets-Environment/secrets-environment.md) | [Authentication-Identity](../Authentication-Identity/authentication-identity.md) | [Backend-Security](../Backend-Security/backend-security.md) | [Security-Headers-Infrastructure](../Security-Headers-Infrastructure/security-headers-infrastructure.md) | [Frontend-Security](../Frontend-Security/frontend-security.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

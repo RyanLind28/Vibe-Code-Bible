@@ -1376,3 +1376,7 @@ events.on("subscription.changed", async (data) => {
 > **See also:** [API-Design](../API-Design/api-design.md) | [Background-Jobs](../Background-Jobs/background-jobs.md) | [Error-Handling-Logging](../Error-Handling-Logging/error-handling-logging.md) | [Auth-Sessions](../Auth-Sessions/auth-sessions.md) | [Security/API-Security](../../Security/API-Security/api-security.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

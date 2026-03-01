@@ -1114,3 +1114,7 @@ console.log(paletteToCSS(palette));
 > **See also:** [Brand-Identity](../Brand-Identity/brand-identity.md) | [Design-Systems](../Design-Systems/design-systems.md) | [Accessibility](../Accessibility/accessibility.md) | [Dark-Mode](../Dark-Mode/dark-mode.md) | [Responsive-Design](../Responsive-Design/responsive-design.md) | [Mobile-First](../Mobile-First/mobile-first.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

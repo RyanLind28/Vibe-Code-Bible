@@ -986,3 +986,7 @@ Use generics when the type parameter appears in multiple positions (input → ou
 > **See also:** [React Fundamentals](../React-Fundamentals/react-fundamentals.md) | [Component Patterns](../Component-Patterns/component-patterns.md) | [Forms & Validation](../Forms-Validation/forms-validation.md) | [Data Fetching](../Data-Fetching/data-fetching.md) | [Next.js Patterns](../Nextjs-Patterns/nextjs-patterns.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

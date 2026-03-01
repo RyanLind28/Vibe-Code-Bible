@@ -723,3 +723,7 @@ function OnboardingComplete({ workspaceName, projectName }: Props) {
 > **See also:** [SEO Copywriting](../SEO-Copywriting/seo-copywriting.md) | [Brand Voice & Tone](../Brand-Voice-Tone/brand-voice-tone.md) | [CTAs & Conversion](../CTAs-Conversion/ctas-conversion.md) | [Headlines & Hooks](../Headlines-Hooks/headlines-hooks.md) | [Landing Pages](../Landing-Pages/landing-pages.md) | [Search Intent](../../SEO/On-Page-SEO/Search-Intent/search-intent.md) | [Core Web Vitals](../../SEO/Technical-SEO/Core-Web-Vitals/core-web-vitals.md) | [Brand Identity](../../UIUX/Brand-Identity/brand-identity.md) | [Accessibility](../../UIUX/Accessibility/accessibility.md) | [UX Patterns](../../UIUX/UX-Patterns/ux-patterns.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

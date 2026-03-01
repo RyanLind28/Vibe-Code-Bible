@@ -1143,3 +1143,7 @@ export function Tabs({ tabs, defaultTab, label }: TabsProps) {
 > **See also:** [Design-Systems](../Design-Systems/design-systems.md) | [UX-Patterns](../UX-Patterns/ux-patterns.md) | [Typography-Color](../Typography-Color/typography-color.md) | [Animation-Motion](../Animation-Motion/animation-motion.md) | [Mobile-First](../Mobile-First/mobile-first.md) | [Dark-Mode](../Dark-Mode/dark-mode.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

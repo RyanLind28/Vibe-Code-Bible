@@ -1449,3 +1449,7 @@ You do not need full HATEOAS compliance — just enough links for navigation and
 > **See also:** [Database-Design](../Database-Design/database-design.md) | [Error-Handling-Logging](../Error-Handling-Logging/error-handling-logging.md) | [Auth-Sessions](../Auth-Sessions/auth-sessions.md) | [Webhooks-Integrations](../Webhooks-Integrations/webhooks-integrations.md) | [Security/API-Security](../../Security/API-Security/api-security.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

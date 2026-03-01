@@ -1144,3 +1144,7 @@ terraform {
 > **See also:** [CICD](../CICD/cicd.md) | [Cloud-Architecture](../Cloud-Architecture/cloud-architecture.md) | [Monitoring-Logging](../Monitoring-Logging/monitoring-logging.md) | [Docker-Containers](../Docker-Containers/docker-containers.md) | [Security/Secrets-Environment](../../Security/Secrets-Environment/secrets-environment.md)
 >
 > **Last reviewed:** 2026-03
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

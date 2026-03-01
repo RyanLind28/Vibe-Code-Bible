@@ -1164,3 +1164,7 @@ process.on("SIGTERM", async () => {
 > **See also:** [Error-Handling-Logging](../Error-Handling-Logging/error-handling-logging.md) | [Webhooks-Integrations](../Webhooks-Integrations/webhooks-integrations.md) | [Serverless-Edge](../Serverless-Edge/serverless-edge.md) | [Caching-Strategies](../Caching-Strategies/caching-strategies.md) | [Real-Time](../Real-Time/real-time.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

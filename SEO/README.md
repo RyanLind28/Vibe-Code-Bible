@@ -39,3 +39,7 @@ When adding or updating files:
 - Include code snippets where applicable (HTML, JSON-LD, config files).
 - Add edge cases and common mistakes.
 - Tag updates with the date and source.
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

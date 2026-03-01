@@ -1660,3 +1660,7 @@ DATABASE_URL=postgresql://localhost:5432/myapp_dev
 > **See also:** [API-Security](../API-Security/api-security.md) | [Backend-Security](../Backend-Security/backend-security.md) | [Security-Headers-Infrastructure](../Security-Headers-Infrastructure/security-headers-infrastructure.md) | [Security-Testing-Monitoring](../Security-Testing-Monitoring/security-testing-monitoring.md) | [Dependencies-Supply-Chain](../Dependencies-Supply-Chain/dependencies-supply-chain.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

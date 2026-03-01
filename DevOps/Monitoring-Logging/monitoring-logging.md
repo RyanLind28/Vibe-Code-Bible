@@ -875,3 +875,7 @@ metrics.counter("api.requests", {
 > **See also:** [CICD](../CICD/cicd.md) | [Cloud-Architecture](../Cloud-Architecture/cloud-architecture.md) | [Infrastructure-as-Code](../Infrastructure-as-Code/infrastructure-as-code.md) | [Backend/Error-Handling-Logging](../../Backend/Error-Handling-Logging/error-handling-logging.md) | [Security/Security-Testing-Monitoring](../../Security/Security-Testing-Monitoring/security-testing-monitoring.md)
 >
 > **Last reviewed:** 2026-03
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

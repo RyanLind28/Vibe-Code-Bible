@@ -1149,3 +1149,7 @@ export default function Error({
 > **See also:** [React Fundamentals](../React-Fundamentals/react-fundamentals.md) | [Data Fetching](../Data-Fetching/data-fetching.md) | [CSS Architecture](../CSS-Architecture/css-architecture.md) | [Performance](../Performance/performance.md) | [TypeScript-React](../TypeScript-React/typescript-react.md) | [Forms & Validation](../Forms-Validation/forms-validation.md) | [Frontend Security](../../Security/Frontend-Security/frontend-security.md) | [SEO](../../SEO/)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

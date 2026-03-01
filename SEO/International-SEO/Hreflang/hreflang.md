@@ -225,3 +225,7 @@ ERROR: Hreflang pointing to non-200 page
 *Last reviewed: 2026-02*
 
 **See also:** [Geo-Targeting](../Geo-Targeting/geo-targeting.md) | [Site Structure](../../Technical-SEO/Site-Structure/site-structure.md)
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

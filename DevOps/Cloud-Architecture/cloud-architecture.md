@@ -796,3 +796,7 @@ resource "cloudflare_load_balancer_monitor" "health" {
 > **See also:** [CICD](../CICD/cicd.md) | [Docker-Containers](../Docker-Containers/docker-containers.md) | [Monitoring-Logging](../Monitoring-Logging/monitoring-logging.md) | [Infrastructure-as-Code](../Infrastructure-as-Code/infrastructure-as-code.md) | [Backend/Serverless-Edge](../../Backend/Serverless-Edge/serverless-edge.md) | [Backend/Caching-Strategies](../../Backend/Caching-Strategies/caching-strategies.md)
 >
 > **Last reviewed:** 2026-03
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

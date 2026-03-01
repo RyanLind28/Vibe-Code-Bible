@@ -1454,3 +1454,7 @@ describe("Security Headers", () => {
 > **See also:** [Frontend-Security](../Frontend-Security/frontend-security.md) | [Data-Protection](../Data-Protection/data-protection.md) | [Secrets-Environment](../Secrets-Environment/secrets-environment.md) | [Dependencies-Supply-Chain](../Dependencies-Supply-Chain/dependencies-supply-chain.md) | [Security-Testing-Monitoring](../Security-Testing-Monitoring/security-testing-monitoring.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

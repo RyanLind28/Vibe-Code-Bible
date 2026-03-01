@@ -776,3 +776,7 @@ RULES FOR OUTREACH EMAILS:
 > **See also:** [SEO Copywriting](../SEO-Copywriting/seo-copywriting.md) | [Headlines & Hooks](../Headlines-Hooks/headlines-hooks.md) | [CTAs & Conversion](../CTAs-Conversion/ctas-conversion.md) | [Brand Voice & Tone](../Brand-Voice-Tone/brand-voice-tone.md) | [Content Writing](../Content-Writing/content-writing.md) | [Link Building](../../SEO/Off-Page-SEO/Link-Building/link-building.md) | [Digital PR](../../SEO/Off-Page-SEO/Digital-PR/digital-pr.md) | [Brand Mentions](../../SEO/Off-Page-SEO/Brand-Mentions/brand-mentions.md) | [Content Clusters](../../SEO/Content-SEO/Content-Clusters/content-clusters.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

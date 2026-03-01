@@ -891,3 +891,7 @@ Use this checklist to verify that AI-generated output matches your brand. Run it
 > **See also:** [Design-Systems](../Design-Systems/design-systems.md) | [Typography-Color](../Typography-Color/typography-color.md) | [Dark-Mode](../Dark-Mode/dark-mode.md) | [Accessibility](../Accessibility/accessibility.md) | [Animation-Motion](../Animation-Motion/animation-motion.md) | [Responsive-Design](../Responsive-Design/responsive-design.md) | [UX-Patterns](../UX-Patterns/ux-patterns.md) | [Mobile-First](../Mobile-First/mobile-first.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

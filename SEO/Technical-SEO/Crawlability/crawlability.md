@@ -171,3 +171,7 @@ AFTER (flattened):
 > **See also:** [Site Structure](../Site-Structure/site-structure.md) | [Core Web Vitals](../Core-Web-Vitals/core-web-vitals.md) | [Structured Data](../Structured-Data/structured-data.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

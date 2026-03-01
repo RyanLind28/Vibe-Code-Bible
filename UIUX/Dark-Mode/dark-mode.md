@@ -987,3 +987,7 @@ body {
 > **See also:** [Brand-Identity](../Brand-Identity/brand-identity.md) | [Design-Systems](../Design-Systems/design-systems.md) | [Typography-Color](../Typography-Color/typography-color.md) | [Accessibility](../Accessibility/accessibility.md) | [Responsive-Design](../Responsive-Design/responsive-design.md) | [Animation-Motion](../Animation-Motion/animation-motion.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

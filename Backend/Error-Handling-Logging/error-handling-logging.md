@@ -1258,3 +1258,7 @@ catch (error) {
 > **See also:** [API-Design](../API-Design/api-design.md) | [Background-Jobs](../Background-Jobs/background-jobs.md) | [Webhooks-Integrations](../Webhooks-Integrations/webhooks-integrations.md) | [Serverless-Edge](../Serverless-Edge/serverless-edge.md) | [Security/Backend-Security](../../Security/Backend-Security/backend-security.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

@@ -973,3 +973,7 @@ console.log(`:root {\n${rampToCSS("primary", indigoPalette)}\n}`);
 > **See also:** [Brand-Identity](../Brand-Identity/brand-identity.md) | [Accessibility](../Accessibility/accessibility.md) | [Typography-Color](../Typography-Color/typography-color.md) | [Dark-Mode](../Dark-Mode/dark-mode.md) | [Responsive-Design](../Responsive-Design/responsive-design.md) | [UX-Patterns](../UX-Patterns/ux-patterns.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

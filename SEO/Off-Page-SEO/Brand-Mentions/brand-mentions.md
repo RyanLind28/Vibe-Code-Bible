@@ -175,3 +175,7 @@ TACTICS:
 *Last reviewed: 2026-02*
 
 **See also:** [Link Building](../Link-Building/link-building.md) | [Digital PR](../Digital-PR/digital-pr.md) | [LLM Visibility](../../AI-SEO/LLM-Visibility/llm-visibility.md)
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

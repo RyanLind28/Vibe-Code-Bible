@@ -577,3 +577,7 @@ is drifting. Above 3 means the voice is strong. Record scores and notes.
 > **See also:** [SEO Copywriting](../SEO-Copywriting/seo-copywriting.md) | [Headlines & Hooks](../Headlines-Hooks/headlines-hooks.md) | [UX Writing](../UX-Writing/ux-writing.md) | [CTAs & Conversion](../CTAs-Conversion/ctas-conversion.md) | [Content Writing](../Content-Writing/content-writing.md) | [Topical Authority](../../SEO/Content-SEO/Topical-Authority/topical-authority.md) | [Brand Mentions](../../SEO/Off-Page-SEO/Brand-Mentions/brand-mentions.md) | [Generative Engine Optimization](../../SEO/AI-SEO/Generative-Engine-Optimization/generative-engine-optimization.md) | [Brand Identity](../../UIUX/Brand-Identity/brand-identity.md) | [Design Systems](../../UIUX/Design-Systems/design-systems.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

@@ -270,3 +270,7 @@ MEDIUM — "Duplicate — Google chose canonical" (350 pages):
 *Last reviewed: 2026-02*
 
 **See also:** [Google Analytics](../Google-Analytics/google-analytics.md) | [Crawlability](../../Technical-SEO/Crawlability/crawlability.md)
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

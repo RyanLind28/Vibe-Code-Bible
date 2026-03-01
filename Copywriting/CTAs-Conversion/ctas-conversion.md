@@ -888,3 +888,7 @@ function SignupForm() {
 > **See also:** [SEO Copywriting](../SEO-Copywriting/seo-copywriting.md) | [Headlines & Hooks](../Headlines-Hooks/headlines-hooks.md) | [Landing Pages](../Landing-Pages/landing-pages.md) | [UX Writing](../UX-Writing/ux-writing.md) | [Product Copy](../Product-Copy/product-copy.md) | [Email Copy](../Email-Copy/email-copy.md) | [Title Tags](../../SEO/On-Page-SEO/Title-Tags/title-tags.md) | [Product Page SEO](../../SEO/E-commerce-SEO/Product-Page-SEO/product-page-seo.md) | [Core Web Vitals](../../SEO/Technical-SEO/Core-Web-Vitals/core-web-vitals.md) | [UX Patterns](../../UIUX/UX-Patterns/ux-patterns.md) | [Accessibility](../../UIUX/Accessibility/accessibility.md) | [Forms & Validation](../../Frontend/Forms-Validation/forms-validation.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

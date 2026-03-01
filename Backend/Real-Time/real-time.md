@@ -1409,3 +1409,7 @@ export function useTodos(listId: string) {
 > **See also:** [API-Design](../API-Design/api-design.md) | [Caching-Strategies](../Caching-Strategies/caching-strategies.md) | [Serverless-Edge](../Serverless-Edge/serverless-edge.md) | [Background-Jobs](../Background-Jobs/background-jobs.md) | [Security/API-Security](../../Security/API-Security/api-security.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

@@ -1261,3 +1261,7 @@ dialog:not([open])::backdrop {
 > **See also:** [Design-Systems](../Design-Systems/design-systems.md) | [Accessibility](../Accessibility/accessibility.md) | [Mobile-First](../Mobile-First/mobile-first.md) | [Typography-Color](../Typography-Color/typography-color.md) | [UX-Patterns](../UX-Patterns/ux-patterns.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

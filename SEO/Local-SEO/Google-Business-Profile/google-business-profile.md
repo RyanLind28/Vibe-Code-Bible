@@ -224,3 +224,7 @@ WEEK 4:
 *Last reviewed: 2026-02*
 
 **See also:** [Local Citations](../Local-Citations/local-citations.md) | [Structured Data](../../Technical-SEO/Structured-Data/structured-data.md)
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

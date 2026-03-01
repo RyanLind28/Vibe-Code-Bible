@@ -230,3 +230,7 @@ achieve 5-10% CTR through segmentation and personalization.
 *Last reviewed: 2026-02*
 
 **See also:** [LLM Visibility](../LLM-Visibility/llm-visibility.md) | [Structured Data](../../Technical-SEO/Structured-Data/structured-data.md) | [Topical Authority](../../Content-SEO/Topical-Authority/topical-authority.md)
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

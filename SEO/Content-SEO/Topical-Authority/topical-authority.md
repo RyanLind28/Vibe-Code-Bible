@@ -201,3 +201,7 @@ MONTH 7+: Dominance
 **See also:**
 - [Content Clusters](../Content-Clusters/content-clusters.md)
 - [Keyword Research](../Keyword-Research/keyword-research.md)
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

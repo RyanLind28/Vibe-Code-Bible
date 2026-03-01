@@ -1587,3 +1587,7 @@ function ProfileSection() {
 > **See also:** [Accessibility](../Accessibility/accessibility.md) | [Design-Systems](../Design-Systems/design-systems.md) | [Mobile-First](../Mobile-First/mobile-first.md) | [Animation-Motion](../Animation-Motion/animation-motion.md) | [Typography-Color](../Typography-Color/typography-color.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

@@ -205,3 +205,7 @@ export default function RelatedPosts({ currentSlug, category, posts }) {
 *Last reviewed: 2026-02*
 
 **See also:** [Site Structure](../../Site-Structure/) | [Content Clusters](../../Content-Clusters/)
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

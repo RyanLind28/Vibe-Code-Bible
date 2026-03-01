@@ -1108,3 +1108,7 @@ revalidateTag("products");
 > **See also:** [Next.js Patterns](../Nextjs-Patterns/nextjs-patterns.md) | [State Management](../State-Management/state-management.md) | [Performance](../Performance/performance.md) | [React Fundamentals](../React-Fundamentals/react-fundamentals.md) | [Forms & Validation](../Forms-Validation/forms-validation.md) | [TypeScript-React](../TypeScript-React/typescript-react.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

@@ -254,3 +254,7 @@ RENDERED:
 **See also:**
 - [Content Clusters](../Content-Clusters/content-clusters.md)
 - [Topical Authority](../Topical-Authority/topical-authority.md)
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

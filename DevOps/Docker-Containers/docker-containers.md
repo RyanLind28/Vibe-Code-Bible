@@ -740,3 +740,7 @@ RUN apt-get update && \
 > **See also:** [CICD](../CICD/cicd.md) | [Cloud-Architecture](../Cloud-Architecture/cloud-architecture.md) | [Infrastructure-as-Code](../Infrastructure-as-Code/infrastructure-as-code.md) | [Security/Secrets-Environment](../../Security/Secrets-Environment/secrets-environment.md) | [Backend/Background-Jobs](../../Backend/Background-Jobs/background-jobs.md)
 >
 > **Last reviewed:** 2026-03
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

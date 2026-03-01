@@ -995,3 +995,7 @@ try {
 > **See also:** [API-Design](../API-Design/api-design.md) | [Database-Design](../Database-Design/database-design.md) | [Background-Jobs](../Background-Jobs/background-jobs.md) | [Caching-Strategies](../Caching-Strategies/caching-strategies.md) | [Real-Time](../Real-Time/real-time.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

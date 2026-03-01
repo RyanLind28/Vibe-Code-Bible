@@ -132,3 +132,7 @@ https://store.com/mens/shoes/nike-air-max/  (Product page)
 *Last reviewed: 2026-02*
 
 **See also:** [Crawlability](../Crawlability/crawlability.md) | [Internal Linking](../../On-Page-SEO/Internal-Linking/internal-linking.md)
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

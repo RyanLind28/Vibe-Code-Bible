@@ -1320,3 +1320,7 @@ const posts = await prisma.$queryRaw`
 > **See also:** [API-Design](../API-Design/api-design.md) | [Caching-Strategies](../Caching-Strategies/caching-strategies.md) | [Auth-Sessions](../Auth-Sessions/auth-sessions.md) | [Error-Handling-Logging](../Error-Handling-Logging/error-handling-logging.md) | [Security/Backend-Security](../../Security/Backend-Security/backend-security.md) | [Security/Data-Protection](../../Security/Data-Protection/data-protection.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

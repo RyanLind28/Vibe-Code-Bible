@@ -981,3 +981,7 @@ jobs:
 > **See also:** [Secrets-Environment](../Secrets-Environment/secrets-environment.md) | [Security-Headers-Infrastructure](../Security-Headers-Infrastructure/security-headers-infrastructure.md) | [Security-Testing-Monitoring](../Security-Testing-Monitoring/security-testing-monitoring.md) | [Backend-Security](../Backend-Security/backend-security.md) | [API-Security](../API-Security/api-security.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

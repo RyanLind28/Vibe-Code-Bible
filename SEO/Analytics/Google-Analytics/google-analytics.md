@@ -268,3 +268,7 @@ increased 12.1% MoM to $428,000, representing 34% of total revenue.
 Last reviewed: 2026-02
 
 See also: [Search Console](../Search-Console/)
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

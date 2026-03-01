@@ -1379,3 +1379,7 @@ function ExternalLink({ href, children, className }: ExternalLinkProps) {
 > **See also:** [Authentication-Identity](../Authentication-Identity/authentication-identity.md) | [Security-Headers-Infrastructure](../Security-Headers-Infrastructure/security-headers-infrastructure.md) | [Backend-Security](../Backend-Security/backend-security.md) | [API-Security](../API-Security/api-security.md) | [Data-Protection](../Data-Protection/data-protection.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

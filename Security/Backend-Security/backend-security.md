@@ -1465,3 +1465,7 @@ export {
 > **See also:** [Authentication-Identity](../Authentication-Identity/authentication-identity.md) | [API-Security](../API-Security/api-security.md) | [Secrets-Environment](../Secrets-Environment/secrets-environment.md) | [Data-Protection](../Data-Protection/data-protection.md) | [Security-Testing-Monitoring](../Security-Testing-Monitoring/security-testing-monitoring.md)
 >
 > **Last reviewed:** 2026-02
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

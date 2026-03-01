@@ -72,3 +72,7 @@ Touch targets, thumb zones, bottom navigation, mobile typography, mobile forms, 
 ## Status
 
 Complete — all 9 guides are written and reviewed. Last updated: 2026-02.
+
+---
+
+*By Ryan Lind ([ryanlind.co.uk](https://ryanlind.co.uk)), Assisted by Claude Code and Google Gemini.*

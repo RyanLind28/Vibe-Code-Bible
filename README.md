@@ -35,8 +35,9 @@ Each `.md` file is a self-contained knowledge module covering **principles, LLM-
 | [Security](./Security/) | Secrets Management, Authentication, Frontend Security, Backend Security, API Security, Data Protection, Security Headers, Supply Chain, Security Testing | Complete |
 | [AI Integration](./AI-Integration/) | LLM Patterns, Prompt Engineering, RAG, AI Agents, Embeddings | Planned |
 | [Testing](./Testing/) | Unit Testing, E2E Testing, Performance Testing, Test Strategy | Planned |
-| [Product & Growth](./Product-Growth/) | Analytics, A/B Testing, Conversion Optimization, Onboarding | Planned |
+| [Product & Growth](./Product-Growth/) | Analytics, Experimentation, Conversion Optimization, Onboarding, Retention, Email/Notifications, Referrals, Billing, Marketing Channels, Product-Led Growth | Complete |
 | [Copywriting](./Copywriting/) | SEO Copywriting, UX Writing, Landing Pages, Email Copy, CTAs & Conversion, Headlines & Hooks, Brand Voice & Tone, Product Copy, Content Writing | Complete |
+| [Tools](./Tools/) | BaaS Platforms, Authentication, Databases, Email Services, Analytics & Monitoring, Payments, Live Chat, Background Jobs, Hosting, Search, CMS, File Storage, Communication (~40 tools) | Complete |
 
 ## File Format
 

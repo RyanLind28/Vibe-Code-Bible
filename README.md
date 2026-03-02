@@ -33,7 +33,7 @@ Each `.md` file is a self-contained knowledge module covering **principles, LLM-
 | [Backend](./Backend/) | API Design, Database Design, Caching, Error Handling, Auth & Sessions, Serverless, Background Jobs, Webhooks, Real-Time | Complete |
 | [DevOps](./DevOps/) | CI/CD, Docker, Cloud Architecture, Monitoring, Infrastructure as Code | Complete |
 | [Security](./Security/) | Secrets Management, Authentication, Frontend Security, Backend Security, API Security, Data Protection, Security Headers, Supply Chain, Security Testing | Complete |
-| [AI Integration](./AI-Integration/) | LLM Patterns, Prompt Engineering, RAG, AI Agents, Embeddings | Planned |
+| [AI Integration](./AI-Integration/) | LLM Patterns, Prompt Engineering, RAG, AI Agents, Embeddings | Complete |
 | [Testing](./Testing/) | Unit Testing, E2E Testing, Performance Testing, Test Strategy | Planned |
 | [Product & Growth](./Product-Growth/) | Analytics, Experimentation, Conversion Optimization, Onboarding, Retention, Email/Notifications, Referrals, Billing, Marketing Channels, Product-Led Growth | Complete |
 | [Copywriting](./Copywriting/) | SEO Copywriting, UX Writing, Landing Pages, Email Copy, CTAs & Conversion, Headlines & Hooks, Brand Voice & Tone, Product Copy, Content Writing | Complete |

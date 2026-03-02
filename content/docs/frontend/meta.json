@@ -1,0 +1,15 @@
+{
+  "title": "Frontend",
+  "pages": [
+    "index",
+    "react-fundamentals",
+    "nextjs-patterns",
+    "typescript-react",
+    "component-patterns",
+    "state-management",
+    "data-fetching",
+    "forms-validation",
+    "css-architecture",
+    "performance"
+  ]
+}

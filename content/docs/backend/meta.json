@@ -1,0 +1,15 @@
+{
+  "title": "Backend",
+  "pages": [
+    "index",
+    "api-design",
+    "database-design",
+    "auth-sessions",
+    "caching-strategies",
+    "error-handling-logging",
+    "serverless-edge",
+    "background-jobs",
+    "webhooks-integrations",
+    "real-time"
+  ]
+}

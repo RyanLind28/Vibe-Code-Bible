@@ -1,0 +1,15 @@
+{
+  "title": "Security",
+  "pages": [
+    "index",
+    "authentication-identity",
+    "secrets-environment",
+    "frontend-security",
+    "backend-security",
+    "api-security",
+    "data-protection",
+    "security-headers-infrastructure",
+    "dependencies-supply-chain",
+    "security-testing-monitoring"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "title": "UI/UX",
+  "pages": [
+    "index",
+    "design-systems",
+    "brand-identity",
+    "accessibility",
+    "responsive-design",
+    "mobile-first",
+    "typography-color",
+    "ux-patterns",
+    "animation-motion",
+    "dark-mode"
+  ]
+}

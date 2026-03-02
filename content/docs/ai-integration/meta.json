@@ -1,0 +1,15 @@
+{
+  "title": "AI Integration",
+  "pages": [
+    "index",
+    "llm-patterns",
+    "prompt-engineering",
+    "rag",
+    "embeddings",
+    "ai-agents",
+    "ai-workflows",
+    "ai-ux-patterns",
+    "multimodal-ai",
+    "ai-observability"
+  ]
+}

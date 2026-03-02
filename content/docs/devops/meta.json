@@ -1,0 +1,11 @@
+{
+  "title": "DevOps",
+  "pages": [
+    "index",
+    "cicd",
+    "docker-containers",
+    "cloud-architecture",
+    "infrastructure-as-code",
+    "monitoring-logging"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "title": "Tools",
+  "pages": [
+    "index",
+    "baas-platforms",
+    "authentication",
+    "databases",
+    "hosting-deployment",
+    "payments",
+    "email-services",
+    "analytics-monitoring",
+    "cms",
+    "file-storage",
+    "background-jobs",
+    "search",
+    "communication",
+    "live-chat-support"
+  ]
+}

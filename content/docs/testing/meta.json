@@ -1,6 +1,10 @@
 {
   "title": "Testing",
   "pages": [
-    "index"
+    "index",
+    "unit-testing",
+    "e2e-testing",
+    "performance-testing",
+    "test-strategy"
   ]
 }
